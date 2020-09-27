@@ -33,6 +33,9 @@ server:
   stage: deploy
   script:
     - cd server
+    - apt-get update -yq
+    - apt-get install -y ruby-dev
+    - gem install dpl
     - gem install dpl
     - dpl --provider=heroku --app=$APP_ID --api-key=$HEROKU_API_KEY
 
