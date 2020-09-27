@@ -7,9 +7,10 @@ cache:
     - .import/
 
 stages:
-  - export
+  - web
   - server
-  - deploy
+  - pages
+  - windows
 
 variables:
   EXPORT_NAME: project-v3
@@ -29,7 +30,7 @@ before_script:
 #       - build/linux
 
 server:
-  image: ruby:alpine
+  image: ruby
   only:
     - master
   stage: server
@@ -41,7 +42,7 @@ server:
 windows:
   only:
     - master
-  stage: export
+  stage: windows
   script:
     - mkdir -v -p build/windows
     - godot -v --export "Windows Desktop" build/windows/$EXPORT_NAME.exe
@@ -63,7 +64,7 @@ windows:
 web:
   only:
     - master
-  stage: export
+  stage: web
   script:
     - mkdir -v -p build/web
     - godot -v --export "HTML5" build/web/index.html
@@ -94,8 +95,8 @@ web:
 pages:
   only:
     - master
-  image: ruby:alpine
-  stage: deploy
+  image: ruby
+  stage: pages
   dependencies:
     - web
   script:
