@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scenes/EchoClient.gd" type="Script" id=1]
+
+[node name="Control" type="Control"]
+margin_right = 200.0
+margin_bottom = 100.0
+script = ExtResource( 1 )
+
+[node name="Chat" type="TextEdit" parent="."]
+margin_right = 200.0
+margin_bottom = 100.0
