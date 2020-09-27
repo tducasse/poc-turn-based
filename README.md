@@ -4,3 +4,4 @@
 
 
 App deployed [here](https://aldevs.gitlab.io/gamedev/projectv3/)
+Heroku WS server deployed at `projectv3.herokuapp.com` and dashboard [here](https://dashboard.heroku.com/apps/projectv3)
