@@ -8,8 +8,8 @@ cache:
 
 stages:
   - export
-  - deploy
   - server
+  - deploy
 
 variables:
   EXPORT_NAME: project-v3
