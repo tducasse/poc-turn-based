@@ -1,6 +1,8 @@
 import WebSocket from "ws";
 
-const ws = new WebSocket.Server({ port: 3000 });
+const PORT = process.env.PORT || 3000;
+
+const ws = new WebSocket.Server({ port: PORT });
 
 const messages = ["Start chatting"];
 
