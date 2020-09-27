@@ -9,6 +9,7 @@ cache:
 stages:
   - export
   - deploy
+  - server
 
 variables:
   EXPORT_NAME: project-v3
@@ -28,14 +29,12 @@ before_script:
 #       - build/linux
 
 server:
+  image: ruby:alpine
   only:
     - master
-  stage: deploy
+  stage: server
   script:
     - cd server
-    - apt-get update -yq
-    - apt-get install -y ruby-dev
-    - gem install dpl
     - gem install dpl
     - dpl --provider=heroku --app=$APP_ID --api-key=$HEROKU_API_KEY
 
@@ -95,6 +94,7 @@ web:
 pages:
   only:
     - master
+  image: ruby:alpine
   stage: deploy
   dependencies:
     - web
