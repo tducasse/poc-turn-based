@@ -6,13 +6,17 @@ const ws = new WebSocket.Server({ port: PORT });
 
 const messages = ["Start chatting"];
 
-const sendNewMessage = (message) => {
-  messages.push(message);
+const sendToEveryone = (params) => {
   ws.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
-      client.send(JSON.stringify(["new-message", [message]]));
+      client.send(JSON.stringify(params));
     }
   });
+};
+
+const sendNewMessage = (message) => {
+  messages.push(message);
+  sendToEveryone(["new-message", [message]]);
 };
 
 const sendNewMessages = (m) => m.forEach(sendNewMessage);
@@ -23,6 +27,10 @@ ws.on("connection", (socketClient) => {
 
   // send all previous messages to every client
   socketClient.send(JSON.stringify(["new-message", messages]));
+
+  if (ws.clients.size >= 2) {
+    sendToEveryone(["begin", ""]);
+  }
 
   socketClient.on("close", () => {
     console.log("closed");

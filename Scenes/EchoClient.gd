@@ -57,6 +57,8 @@ func _on_data():
 	match type:
 		"new-message":
 			add_new_messages(payload)
+		"begin":
+			print('begin')
 		_:
 			print(type + ": not supported")
 	
