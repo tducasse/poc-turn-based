@@ -16,8 +16,12 @@ _global_script_class_icons={
 [application]
 
 config/name="projectv3"
-run/main_scene="res://Scenes/Sample.tscn"
+run/main_scene="res://Scenes/Main.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+GameState="*res://Utils/GameState.gd"
 
 [display]
 
