@@ -27,6 +27,15 @@ before_script:
 #     paths:
 #       - build/linux
 
+server:
+  only:
+    - master
+  stage: deploy
+  script:
+    - cd server
+    - gem install dpl
+    - dpl --provider=heroku --app=$APP_ID --api-key=$HEROKU_API_KEY
+
 windows:
   only:
     - master
