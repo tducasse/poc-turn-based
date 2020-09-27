@@ -27,6 +27,7 @@ func _ready():
 		print("Unable to connect")
 		set_process(false)
 
+
 func _closed(was_clean = false):
 	# was_clean will tell you if the disconnection was correctly notified
 	# by the remote peer before closing the socket.
@@ -66,21 +67,24 @@ func _on_data():
 			start_game()
 		_:
 			print(type + ": not supported")
-	
+
 
 func _process(_delta):
 	# Call this in _process or _physics_process. Data transfer, and signals
 	# emission will only happen when calling this function.
 	_client.poll()
-	
+
+
 func add_new_message(message):
 	print(message)
 	chat.text +=message + '\n'
-	
+
+
 func add_new_messages(messages):
 	print(messages)
 	for message in messages:
 		add_new_message(message)
+
 
 func start_game():
 	emit_signal("on_start_game")
