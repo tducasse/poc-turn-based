@@ -7,8 +7,10 @@ cache:
     - .import/
 
 stages:
-  - export
-  - deploy
+  - web
+  - server
+  - pages
+  - windows
 
 variables:
   EXPORT_NAME: project-v3
@@ -27,10 +29,20 @@ before_script:
 #     paths:
 #       - build/linux
 
+server:
+  image: ruby
+  only:
+    - master
+  stage: server
+  script:
+    - cd server
+    - gem install dpl
+    - dpl --provider=heroku --app=$APP_ID --api-key=$HEROKU_API_KEY
+
 windows:
   only:
     - master
-  stage: export
+  stage: windows
   script:
     - mkdir -v -p build/windows
     - godot -v --export "Windows Desktop" build/windows/$EXPORT_NAME.exe
@@ -52,7 +64,7 @@ windows:
 web:
   only:
     - master
-  stage: export
+  stage: web
   script:
     - mkdir -v -p build/web
     - godot -v --export "HTML5" build/web/index.html
@@ -83,7 +95,8 @@ web:
 pages:
   only:
     - master
-  stage: deploy
+  image: ruby
+  stage: pages
   dependencies:
     - web
   script:
