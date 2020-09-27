@@ -1,7 +1,7 @@
 extends Control
 
 # The URL we will connect to
-var websocket_url = "ws://localhost:3000" if OS.is_debug_build() else "ws://projectv3.herokuapp.com"
+var websocket_url = "ws://localhost:3000" if OS.is_debug_build() else "wss://projectv3.herokuapp.com"
 
 # Our WebSocketClient instance
 var _client = WebSocketClient.new()
