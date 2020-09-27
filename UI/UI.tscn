@@ -1,0 +1,47 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://UI/UI.gd" type="Script" id=1]
+
+[node name="UIContainer" type="VBoxContainer"]
+margin_right = 512.0
+margin_bottom = 288.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+margin_right = 512.0
+margin_bottom = 288.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_top = 10
+custom_constants/margin_left = 5
+
+[node name="TopLine" type="HBoxContainer" parent="MarginContainer"]
+margin_left = 5.0
+margin_top = 10.0
+margin_right = 512.0
+margin_bottom = 288.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RessourceLabel" type="RichTextLabel" parent="MarginContainer/TopLine"]
+margin_right = 251.0
+margin_bottom = 278.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Ressource :"
+
+[node name="IncomeLabel" type="RichTextLabel" parent="MarginContainer/TopLine"]
+margin_left = 255.0
+margin_right = 507.0
+margin_bottom = 278.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Income : "
+__meta__ = {
+"_edit_use_anchors_": false
+}
