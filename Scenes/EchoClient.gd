@@ -8,6 +8,8 @@ var _client = WebSocketClient.new()
 
 onready var chat = $Chat
 
+signal on_start_game()
+
 func _ready():
 	# Connect base signals to get notified of connection open, close, and errors.
 	_client.connect("connection_closed", self, "_closed")
@@ -58,7 +60,8 @@ func _on_data():
 		"new-message":
 			add_new_messages(payload)
 		"begin":
-			print('begin')
+			add_new_messages("Starting game")
+			start_game()
 		_:
 			print(type + ": not supported")
 	
@@ -76,3 +79,6 @@ func add_new_messages(messages):
 	print(messages)
 	for message in messages:
 		add_new_message(message)
+
+func start_game():
+	emit_signal("on_start_game")

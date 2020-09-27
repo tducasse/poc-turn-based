@@ -51,6 +51,10 @@ func update_prep_label():
 	prepTimerLabel.bbcode_text = "[center]%d[/center]" % prepTimer.time_left
 
 
+func start_prepTimer():
+	prepTimer.start()
+
+
 func _on_PrepTimer_timeout():
 	earn_income()
 	prepTimer.start()

@@ -47,7 +47,6 @@ bbcode_enabled = true
 
 [node name="PrepTimer" type="Timer" parent="MarginContainer/TopLine/PrepTimerLabel"]
 wait_time = 20.0
-autostart = true
 
 [node name="IncomeLabel" type="RichTextLabel" parent="MarginContainer/TopLine"]
 margin_left = 340.0
