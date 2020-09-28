@@ -8,5 +8,8 @@
 script = ExtResource( 3 )
 
 [node name="UIContainer" parent="." instance=ExtResource( 2 )]
+margin_right = 1913.0
+margin_bottom = 1071.0
 
 [node name="Shop" parent="." instance=ExtResource( 1 )]
+position = Vector2( -6.60394, -3.77551 )

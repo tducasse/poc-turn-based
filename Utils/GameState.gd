@@ -9,7 +9,6 @@ func _ready():
 	queue.queue_resource("res://Scenes/Sample.tscn", true)
 	var root = get_tree().get_root()
 	current_scene = root.get_child(root.get_child_count() -1)
-	print(current_scene.name, root.get_child_count())
 
 
 func load_scene(path: String):

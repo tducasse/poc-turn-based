@@ -7,9 +7,12 @@ var websocket_url = "ws://localhost:3000" if OS.is_debug_build() else "wss://pro
 var _client = WebSocketClient.new()
 
 onready var chat = $Chat
+onready var chat_input = $Input
 
 signal on_start_game()
 signal add_game_room(value)
+
+var current_room = "lobby"
 
 func _ready():
 	# Connect base signals to get notified of connection open, close, and errors.
@@ -34,13 +37,15 @@ func _closed(was_clean = false):
 	print("Closed, clean: ", was_clean)
 	set_process(false)
 
+
 func _connected(proto = ""):
 	# This is called on connection, "proto" will be the selected WebSocket
 	# sub-protocol (which is optional)
 	print("Connected with protocol: ", proto)
 	# You MUST always use get_peer(1).put_packet to send data to server,
 	# and not put_packet directly when not using the MultiplayerAPI.
-	_client.get_peer(1).put_packet(JSON.print(["new-connection", _client.get_unique_id()]).to_utf8())
+#	_client.get_peer(1).put_packet(JSON.print(["new-connection", _client.get_unique_id()]).to_utf8())
+
 
 func _on_data():
 	# Print the received packet, you MUST always use get_peer(1).get_packet
@@ -52,18 +57,26 @@ func _on_data():
 		return
 	
 	data = parse_json(data)
-	if not typeof(data) == TYPE_ARRAY:
+	if not typeof(data) == TYPE_DICTIONARY:
 		return
 
-	var type = data[0]
-	var payload = data[1]
+	var type = data.get("type")
+	var payload = data.get("payload")
+	var room = data.get("room")
+	
+	if room and (current_room != room):
+		return
 	
 	match type:
-		"new-message":
-			add_new_messages(payload)
-			add_game_room("Room 1")
+		"list-rooms":
+			add_old_rooms(payload)
+		"create-room":
+			add_game_room(payload)
+		"new-chat-message":
+			add_new_message(payload)
+		"ready-game":
+			ready_game()
 		"begin":
-			add_new_message("Starting game")
 			start_game()
 		_:
 			print(type + ": not supported")
@@ -73,17 +86,30 @@ func _process(_delta):
 	# Call this in _process or _physics_process. Data transfer, and signals
 	# emission will only happen when calling this function.
 	_client.poll()
+	
 
 
 func add_new_message(message):
-	print(message)
 	chat.text +=message + '\n'
 
 
-func add_new_messages(messages):
-	print(messages)
-	for message in messages:
-		add_new_message(message)
+func leave_room(room):
+	_client.get_peer(1).put_packet(JSON.print(
+		{
+			"type": "leave-room",
+			"payload": room
+		}
+	).to_utf8())
+
+	
+func join_room(room):
+	current_room = room
+	_client.get_peer(1).put_packet(JSON.print(
+		{
+			"type": "join-room",
+			"payload": room
+		}
+	).to_utf8())
 
 
 func start_game():
@@ -92,3 +118,36 @@ func start_game():
 
 func add_game_room(value):
 	emit_signal("add_game_room", value)
+
+
+func _on_Input_text_entered(new_text):
+	chat_input.text = ""
+	_client.get_peer(1).put_packet(JSON.print(
+		{
+			"type": "new-chat-message",
+			"payload": new_text,
+			"room": current_room
+		}
+	).to_utf8())
+
+
+func create_game(name):
+	_client.get_peer(1).put_packet(JSON.print(
+		{
+			"type": "create-room",
+			"payload": name,
+			"room": current_room
+		}
+	).to_utf8())
+	
+func add_old_rooms(rooms):
+	for room in rooms:
+		add_game_room(room)
+	
+func ready_game():
+	_client.get_peer(1).put_packet(JSON.print(
+		{
+			"type": "ready-game",
+			"room": current_room
+		}
+	).to_utf8())

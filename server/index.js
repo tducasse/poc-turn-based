@@ -1,43 +1,44 @@
 import WebSocket from "ws";
+import { v4 as uuidv4 } from "uuid";
+import store, {
+  createRoom,
+  joinRoom,
+  leaveRoom,
+  setReady,
+  sendNewMessage,
+  registerUser,
+} from "./util";
+import { EVENT_TYPES } from "./constants";
 
 const PORT = process.env.PORT || 3000;
 
 const ws = new WebSocket.Server({ port: PORT });
 
-const messages = ["Start chatting"];
+store.ws = ws;
 
-const sendToEveryone = (params) => {
-  ws.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(JSON.stringify(params));
-    }
-  });
-};
+ws.on("connection", (client) => {
+  // create a unique id, and register the user
+  const uuid = uuidv4();
+  registerUser(uuid, client);
 
-const sendNewMessage = (message) => {
-  messages.push(message);
-  sendToEveryone(["new-message", [message]]);
-};
+  console.log(`New connection`);
+  console.log(`Connected clients = ${ws.clients.size}`);
 
-const sendNewMessages = (m) => m.forEach(sendNewMessage);
+  // send all the rooms to the client
+  client.send(
+    JSON.stringify({
+      type: EVENT_TYPES.LIST_ROOMS,
+      payload: store.rooms.map((el) => el.name).filter((el) => el !== "lobby"),
+    })
+  );
 
-ws.on("connection", (socketClient) => {
-  console.log("connected");
-  console.log("client Set length: ", ws.clients.size);
-
-  // send all previous messages to every client
-  socketClient.send(JSON.stringify(["new-message", messages]));
-
-  if (ws.clients.size >= 2) {
-    sendToEveryone(["begin", ""]);
-  }
-
-  socketClient.on("close", () => {
-    console.log("closed");
-    console.log("Number of clients: ", ws.clients.size);
+  client.on("close", () => {
+    leaveRoom(uuid);
+    console.log("Disconnected");
+    console.log(`Connected clients = ${ws.clients.size}`);
   });
 
-  socketClient.on("message", (rawData) => {
+  client.on("message", (rawData) => {
     let data;
     try {
       data = JSON.parse(rawData);
@@ -45,13 +46,24 @@ ws.on("connection", (socketClient) => {
       console.error(`Could not parse ${rawData}`);
     }
 
-    const [type, payload] = data;
+    const { type, payload, room } = data;
     switch (type) {
-      case "new-message":
-        sendNewMessages(payload);
+      case EVENT_TYPES.NEW_CHAT_MESSAGE:
+        sendNewMessage(uuid, payload, room);
         break;
-      case "new-connection":
-        sendNewMessage(`New peer connected: ${payload}`);
+      case EVENT_TYPES.READY_GAME:
+        setReady(uuid, room);
+        break;
+      case EVENT_TYPES.JOIN_ROOM:
+        // payload is room name
+        joinRoom(uuid, payload);
+        break;
+      case EVENT_TYPES.CREATE_ROOM:
+        // payload is room name
+        createRoom(uuid, payload);
+        break;
+      case EVENT_TYPES.LEAVE_ROOM:
+        leaveRoom(uuid, room);
         break;
       default:
         console.log(`${type}: not supported`);

@@ -1,10 +1,11 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://UI/UI.gd" type="Script" id=1]
+[ext_resource path="res://Fonts/Assurant-Standard.tres" type="DynamicFont" id=2]
 
 [node name="UIContainer" type="VBoxContainer"]
-margin_right = 512.0
-margin_bottom = 288.0
+margin_right = 1905.0
+margin_bottom = 1064.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 1 )
@@ -13,8 +14,8 @@ __meta__ = {
 }
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-margin_right = 512.0
-margin_bottom = 288.0
+margin_right = 1905.0
+margin_bottom = 1064.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/margin_top = 10
@@ -23,37 +24,40 @@ custom_constants/margin_left = 5
 [node name="TopLine" type="HBoxContainer" parent="MarginContainer"]
 margin_left = 5.0
 margin_top = 10.0
-margin_right = 512.0
-margin_bottom = 288.0
+margin_right = 1905.0
+margin_bottom = 1064.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="RessourceLabel" type="RichTextLabel" parent="MarginContainer/TopLine"]
-margin_right = 166.0
-margin_bottom = 278.0
+margin_right = 630.0
+margin_bottom = 1054.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+custom_fonts/normal_font = ExtResource( 2 )
 bbcode_enabled = true
 bbcode_text = "[center]Ressource :[/center]"
 text = "Ressource :"
 
 [node name="PrepTimerLabel" type="RichTextLabel" parent="MarginContainer/TopLine"]
-margin_left = 170.0
-margin_right = 336.0
-margin_bottom = 278.0
+margin_left = 634.0
+margin_right = 1264.0
+margin_bottom = 1054.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+custom_fonts/normal_font = ExtResource( 2 )
 bbcode_enabled = true
 
 [node name="PrepTimer" type="Timer" parent="MarginContainer/TopLine/PrepTimerLabel"]
 wait_time = 20.0
 
 [node name="IncomeLabel" type="RichTextLabel" parent="MarginContainer/TopLine"]
-margin_left = 340.0
-margin_right = 507.0
-margin_bottom = 278.0
+margin_left = 1268.0
+margin_right = 1900.0
+margin_bottom = 1054.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+custom_fonts/normal_font = ExtResource( 2 )
 bbcode_enabled = true
 bbcode_text = "[center]Income :[/center]"
 text = "Income :"
