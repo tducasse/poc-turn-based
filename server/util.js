@@ -17,9 +17,6 @@ export const findEveryoneInRoom = (name) => {
     console.error(`Can't find room ${name}`);
     return [];
   }
-  console.log(
-    `users are ${room.users.map((uuid) => store.users[uuid].socket)}`
-  );
   return room.users.map((uuid) => store.users[uuid].socket);
 };
 
@@ -100,7 +97,9 @@ export const joinRoom = (uuid, name) => {
   }
 
   const previousRoom = store.users[uuid].room;
-  leaveRoom(uuid, previousRoom);
+  if (previousRoom !== name) {
+    leaveRoom(uuid, previousRoom);
+  }
   if (room.users.find((el) => el === uuid)) {
     return false;
   }
