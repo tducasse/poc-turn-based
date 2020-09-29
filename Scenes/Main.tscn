@@ -32,7 +32,7 @@ size_flags_vertical = 3
 
 [node name="RoomList" type="ItemList" parent="HSplitContainer/VSplitContainer"]
 margin_right = 954.0
-margin_bottom = 954.0
+margin_bottom = 922.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 3 )
@@ -41,24 +41,24 @@ __meta__ = {
 }
 
 [node name="VSplitContainer" type="VSplitContainer" parent="HSplitContainer/VSplitContainer"]
-margin_top = 966.0
+margin_top = 934.0
 margin_right = 954.0
 margin_bottom = 1060.0
 
 [node name="RoomName" type="LineEdit" parent="HSplitContainer/VSplitContainer/VSplitContainer"]
 margin_right = 954.0
-margin_bottom = 43.0
+margin_bottom = 59.0
 custom_fonts/font = ExtResource( 3 )
 placeholder_text = "Enter a room name"
 
 [node name="HSplitContainer" type="HSplitContainer" parent="HSplitContainer/VSplitContainer/VSplitContainer"]
-margin_top = 55.0
+margin_top = 71.0
 margin_right = 954.0
-margin_bottom = 94.0
+margin_bottom = 126.0
 
 [node name="CreateGame" type="Button" parent="HSplitContainer/VSplitContainer/VSplitContainer/HSplitContainer"]
 margin_right = 471.0
-margin_bottom = 39.0
+margin_bottom = 55.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 3 )
@@ -67,11 +67,37 @@ text = "Create game"
 [node name="JoinGame" type="Button" parent="HSplitContainer/VSplitContainer/VSplitContainer/HSplitContainer"]
 margin_left = 483.0
 margin_right = 954.0
-margin_bottom = 39.0
+margin_bottom = 55.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 3 )
 text = "Join game"
+
+[node name="WaitForServer" type="PopupPanel" parent="."]
+margin_right = 1920.0
+margin_bottom = 1088.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="WaitForServer"]
+margin_left = 45.5577
+margin_top = 34.2474
+margin_right = 643.558
+margin_bottom = 197.247
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/normal_font = ExtResource( 3 )
+text = "Waiting for server..."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+[connection signal="connected" from="HSplitContainer/Control" to="." method="_on_Control_connected"]
 [connection signal="item_activated" from="HSplitContainer/VSplitContainer/RoomList" to="." method="_on_ItemList_item_activated"]
 [connection signal="pressed" from="HSplitContainer/VSplitContainer/VSplitContainer/HSplitContainer/CreateGame" to="." method="_on_CreateGame_pressed"]
 [connection signal="pressed" from="HSplitContainer/VSplitContainer/VSplitContainer/HSplitContainer/JoinGame" to="." method="_on_JoinGame_pressed"]
+[connection signal="request_completed" from="HTTPRequest" to="." method="_on_HTTPRequest_request_completed"]

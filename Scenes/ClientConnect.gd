@@ -10,11 +10,18 @@ onready var chat = $Chat
 onready var chat_input = $Input
 
 signal on_start_game()
+signal connected()
 signal add_game_room(value)
 
 var current_room = "lobby"
 
+# disabled by default, because we need to wait for the server to be ready
+# before we even attempt the connection
 func _ready():
+	set_process(false)
+
+
+func init():
 	# Connect base signals to get notified of connection open, close, and errors.
 	_client.connect("connection_closed", self, "_closed")
 	_client.connect("connection_error", self, "_closed")
@@ -29,6 +36,7 @@ func _ready():
 	if err != OK:
 		print("Unable to connect")
 		set_process(false)
+	set_process(true)
 
 
 func _closed(was_clean = false):
@@ -39,6 +47,7 @@ func _closed(was_clean = false):
 
 
 func _connected(proto = ""):
+	emit_signal("connected")
 	# This is called on connection, "proto" will be the selected WebSocket
 	# sub-protocol (which is optional)
 	print("Connected with protocol: ", proto)
