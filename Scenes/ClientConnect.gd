@@ -9,8 +9,6 @@ var _client = WebSocketClient.new()
 onready var chat = $Chat
 onready var chat_input = $Input
 
-var connected = false
-var requesting = false
 
 signal on_start_game()
 signal connected()
