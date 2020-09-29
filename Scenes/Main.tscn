@@ -83,10 +83,10 @@ __meta__ = {
 }
 
 [node name="RichTextLabel" type="RichTextLabel" parent="WaitForServer"]
-margin_left = 45.5577
-margin_top = 34.2474
-margin_right = 643.558
-margin_bottom = 197.247
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 1916.0
+margin_bottom = 1084.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/normal_font = ExtResource( 3 )

@@ -21,11 +21,6 @@ var current_room = "lobby"
 # disabled by default, because we need to wait for the server to be ready
 # before we even attempt the connection
 func _ready():
-	init()
-	
-
-
-func init():
 	# Connect base signals to get notified of connection open, close, and errors.
 	_client.connect("connection_closed", self, "_closed")
 	_client.connect("connection_error", self, "_closed")
@@ -35,13 +30,11 @@ func init():
 	# Alternatively, you could check get_peer(1).get_available_packets() in a loop.
 	_client.connect("data_received", self, "_on_data")
 
-	requesting = true
-	# Initiate connection to the given URL.
-	var err = _client.connect_to_url(websocket_url)
-	if err != OK:
-		print('unable to connect')
-		yield(get_tree().create_timer(1), "timeout")
-	requesting = false
+	init()
+
+
+func init():
+	_client.connect_to_url(websocket_url)
 
 
 func _closed(was_clean = false):
@@ -51,15 +44,9 @@ func _closed(was_clean = false):
 	set_process(false)
 
 
-func _connected(proto = ""):
-	connected = true
+func _connected(_protocol):
 	emit_signal("connected")
-	# This is called on connection, "proto" will be the selected WebSocket
-	# sub-protocol (which is optional)
-	print("Connected with protocol: ", proto)
-	# You MUST always use get_peer(1).put_packet to send data to server,
-	# and not put_packet directly when not using the MultiplayerAPI.
-#	_client.get_peer(1).put_packet(JSON.print(["new-connection", _client.get_unique_id()]).to_utf8())
+	print("Connected")
 
 
 func _on_data():
@@ -98,8 +85,6 @@ func _on_data():
 
 
 func _process(_delta):
-	if not connected and not requesting:
-		init()
 	# Call this in _process or _physics_process. Data transfer, and signals
 	# emission will only happen when calling this function.
 	_client.poll()
