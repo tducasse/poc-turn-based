@@ -94,10 +94,7 @@ text = "Waiting for server..."
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="HTTPRequest" type="HTTPRequest" parent="."]
 [connection signal="connected" from="HSplitContainer/Control" to="." method="_on_Control_connected"]
 [connection signal="item_activated" from="HSplitContainer/VSplitContainer/RoomList" to="." method="_on_ItemList_item_activated"]
 [connection signal="pressed" from="HSplitContainer/VSplitContainer/VSplitContainer/HSplitContainer/CreateGame" to="." method="_on_CreateGame_pressed"]
 [connection signal="pressed" from="HSplitContainer/VSplitContainer/VSplitContainer/HSplitContainer/JoinGame" to="." method="_on_JoinGame_pressed"]
-[connection signal="request_completed" from="HTTPRequest" to="." method="_on_HTTPRequest_request_completed"]

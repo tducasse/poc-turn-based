@@ -9,6 +9,9 @@ var _client = WebSocketClient.new()
 onready var chat = $Chat
 onready var chat_input = $Input
 
+var connected = false
+var requesting = false
+
 signal on_start_game()
 signal connected()
 signal add_game_room(value)
@@ -18,7 +21,8 @@ var current_room = "lobby"
 # disabled by default, because we need to wait for the server to be ready
 # before we even attempt the connection
 func _ready():
-	set_process(false)
+	init()
+	
 
 
 func init():
@@ -31,12 +35,13 @@ func init():
 	# Alternatively, you could check get_peer(1).get_available_packets() in a loop.
 	_client.connect("data_received", self, "_on_data")
 
+	requesting = true
 	# Initiate connection to the given URL.
 	var err = _client.connect_to_url(websocket_url)
 	if err != OK:
-		print("Unable to connect")
-		set_process(false)
-	set_process(true)
+		print('unable to connect')
+		yield(get_tree().create_timer(1), "timeout")
+	requesting = false
 
 
 func _closed(was_clean = false):
@@ -47,6 +52,7 @@ func _closed(was_clean = false):
 
 
 func _connected(proto = ""):
+	connected = true
 	emit_signal("connected")
 	# This is called on connection, "proto" will be the selected WebSocket
 	# sub-protocol (which is optional)
@@ -92,6 +98,8 @@ func _on_data():
 
 
 func _process(_delta):
+	if not connected and not requesting:
+		init()
 	# Call this in _process or _physics_process. Data transfer, and signals
 	# emission will only happen when calling this function.
 	_client.poll()
