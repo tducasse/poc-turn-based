@@ -7,4 +7,6 @@ export const EVENT_TYPES = {
   JOIN_ROOM: "join-room",
   READY_GAME: "ready-game",
   LIST_ROOMS: "list-rooms",
+  UPDATE_ADMIN_DATA: "update-admin-data",
+  REGISTER_ADMIN: "register-admin",
 };

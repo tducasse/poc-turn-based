@@ -125,8 +125,7 @@ func _on_Input_text_entered(new_text):
 	_client.get_peer(1).put_packet(JSON.print(
 		{
 			"type": "new-chat-message",
-			"payload": new_text,
-			"room": current_room
+			"payload": new_text
 		}
 	).to_utf8())
 
@@ -135,8 +134,7 @@ func create_game(name):
 	_client.get_peer(1).put_packet(JSON.print(
 		{
 			"type": "create-room",
-			"payload": name,
-			"room": current_room
+			"payload": name
 		}
 	).to_utf8())
 	
@@ -147,7 +145,6 @@ func add_old_rooms(rooms):
 func ready_game():
 	_client.get_peer(1).put_packet(JSON.print(
 		{
-			"type": "ready-game",
-			"room": current_room
+			"type": "ready-game"
 		}
 	).to_utf8())
