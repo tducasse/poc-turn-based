@@ -34,11 +34,8 @@ export const updateAdminData = () => {
   return true;
 };
 
-// Creates a new admin and assigns them to the lobby room
-export const registerAdmin = (uuid, socket) => {
-  // we have to remove the one that got created onConnection
-  db.users.remove({ uuid });
-  db.users.insert({ ...defaultUserState, uuid, socket, isAdmin: true });
-  db.rooms.findOne({ name: "lobby" }, { $push: { users: uuid } });
+// Makes the current user an admin
+export const registerAdmin = (uuid) => {
+  db.users.update({ uuid }, { $set: { isAdmin: true } });
   updateAdminData();
 };
