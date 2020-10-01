@@ -9,4 +9,5 @@ export const EVENT_TYPES = {
   LIST_ROOMS: "list-rooms",
   UPDATE_ADMIN_DATA: "update-admin-data",
   REGISTER_ADMIN: "register-admin",
+  SEND_QUERY: "send-query",
 };
