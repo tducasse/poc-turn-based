@@ -25,6 +25,7 @@ export const sendQuery = (uuid, query) => {
     console.error(`User is not admin`);
     return false;
   }
+  // TODO: refactor this so that we can't just call it with whatever
   // eslint-disable-next-line no-eval
   eval(query);
   return true;
