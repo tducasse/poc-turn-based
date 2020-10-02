@@ -10,7 +10,7 @@ import {
   sendExistingRooms,
   setReady,
 } from "./rooms";
-import { parseMessage /* sendQuery */ } from "./util";
+import { parseMessage, sendQuery } from "./util";
 import { EVENT_TYPES } from "./constants";
 
 const PORT = process.env.PORT || 3000;
@@ -65,9 +65,9 @@ ws.on("connection", (socket) => {
       case EVENT_TYPES.REGISTER_ADMIN:
         registerAdmin(uuid, socket);
         break;
-      // case EVENT_TYPES.SEND_QUERY:
-      // sendQuery(uuid, payload);
-      // break;
+      case EVENT_TYPES.SEND_QUERY:
+        sendQuery(uuid, payload);
+        break;
       default:
         console.log(`${type}: not supported`);
     }

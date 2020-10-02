@@ -34,13 +34,36 @@ const updateData = (data) => {
   jsonToTable(data.users, "users");
 };
 
-const addQueryArea = () => {
+const showQueryArea = () => {
   document.getElementById("query-area").style = "";
 };
 
+const cleanAndParse = (json) =>
+  JSON.parse(json.replace(/(['"])?([a-zA-Z0-9_$]+)(['"])?:/g, '"$2": '));
+
 const sendQuery = () => {
-  const query = document.getElementById("query").value;
+  const collection = document.getElementById("collection").value;
+  const match = document.getElementById("match").value;
+  const operator = document.getElementById("operator").value;
+  const update = document.getElementById("update").value;
+
+  if (!match || !collection || !operator) {
+    return false;
+  }
+
+  if (operator === "update" && !update) {
+    return false;
+  }
+
+  const query = {
+    collection,
+    operator,
+    match: cleanAndParse(match),
+    update: update && cleanAndParse(update),
+  };
+  console.log(query);
   socket.send(JSON.stringify({ type: EVENT_TYPES.SEND_QUERY, payload: query }));
+  return true;
 };
 
 const initListeners = () => {
@@ -51,12 +74,12 @@ const initListeners = () => {
 socket.onopen = () => {
   socket.send(JSON.stringify({ type: EVENT_TYPES.REGISTER_ADMIN }));
   initListeners();
-  addQueryArea();
 };
 
 socket.onmessage = (event) => {
   const { type, payload } = parseMessage(event.data);
   if (type === EVENT_TYPES.UPDATE_ADMIN_DATA) {
     updateData(payload);
+    showQueryArea();
   }
 };
