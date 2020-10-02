@@ -1,5 +1,5 @@
 import WebSocket from "ws";
-import db from "./db";
+import { db } from "@tducasse/js-db";
 import { sendMessage } from "./util";
 import { EVENT_TYPES } from "./constants";
 

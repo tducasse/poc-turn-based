@@ -1,5 +1,5 @@
+import { db } from "@tducasse/js-db";
 import { EVENT_TYPES } from "./constants";
-import db from "./db";
 import { sendMessage } from "./util";
 
 const defaultUserState = {

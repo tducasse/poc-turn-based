@@ -1,6 +1,8 @@
 import WebSocket from "ws";
 import { v4 as uuidv4 } from "uuid";
 import express from "express";
+import { register, seed } from "@tducasse/js-db";
+import store from "./store";
 import { registerAdmin, registerUser, updateAdminData } from "./users";
 import {
   createRoom,
@@ -23,6 +25,11 @@ app.use(express.static("static"));
 const server = app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 
 const ws = new WebSocket.Server({ server });
+
+// init db
+register("rooms");
+register("users");
+seed(store);
 
 ws.on("connection", (socket) => {
   // create a unique id, and register the user
