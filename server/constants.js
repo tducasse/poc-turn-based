@@ -10,4 +10,5 @@ export const EVENT_TYPES = {
   UPDATE_ADMIN_DATA: "update-admin-data",
   REGISTER_ADMIN: "register-admin",
   SEND_QUERY: "send-query",
+  BACK_TO_LOBBY: "back-to-lobby",
 };

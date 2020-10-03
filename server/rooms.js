@@ -24,6 +24,16 @@ export const sendExistingRooms = (client) => {
   });
 };
 
+const moveBackToLobby = (uuid) => {
+  db.users.update({ uuid }, { $set: { room: "lobby" } });
+  db.rooms.update({ name: "lobby" }, { $push: { users: uuid } });
+  const user = db.users.findOne({ uuid });
+  sendMessage(user.socket, {
+    type: EVENT_TYPES.BACK_TO_LOBBY,
+  });
+  sendExistingRooms(user.socket);
+};
+
 // Make the user `uuid` leave the room
 export const leaveRoom = (uuid, remove = false) => {
   const room = db.rooms.findOne({ users: uuid });
@@ -34,9 +44,11 @@ export const leaveRoom = (uuid, remove = false) => {
   if (room.users.length === 1 && room.name !== "lobby") {
     // let's just remove the room then
     db.rooms.remove({ users: uuid });
-    // TODO: change this once we can go back to the lobby
+    // if we're here because the user left the game
     if (remove) {
       db.users.remove({ uuid });
+    } else {
+      moveBackToLobby(uuid);
     }
     return true;
   }
@@ -51,7 +63,7 @@ export const leaveRoom = (uuid, remove = false) => {
       },
     }
   );
-  // TODO: change this once we can go back to the lobby
+  // if we're here because the user left the game
   if (remove) {
     db.users.remove({ uuid });
   }

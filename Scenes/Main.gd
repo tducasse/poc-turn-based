@@ -31,17 +31,14 @@ func _on_CreateGame_pressed():
 	client_connect.create_game(name)
 
 
-func _on_JoinGame_pressed():
-# TODO: check that the room exists before trying to connect
-#	var name = game_name.text
-#	if not name:
-#		return
-#	game_name.text = ""
-#	client_connect.join_room(name)
-#	GameState.load_scene("res://Scenes/Sample.tscn")
-	pass
-
-
-
 func _on_Control_connected():
 	wait_for_server.visible = false
+
+
+func _on_RoomName_text_entered(_new_text):
+	_on_CreateGame_pressed()
+
+
+func _on_Control_back_to_lobby():
+	rooms.clear()
+	GameState.restore_main_scene()

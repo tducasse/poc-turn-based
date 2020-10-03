@@ -12,6 +12,7 @@ onready var chat_input = $Input
 
 signal on_start_game()
 signal connected()
+signal back_to_lobby()
 signal add_game_room(value)
 
 var current_room = "lobby"
@@ -62,10 +63,6 @@ func _on_data():
 
 	var type = data.get("type")
 	var payload = data.get("payload")
-	var room = data.get("room")
-	
-	if room and (current_room != room):
-		return
 	
 	match type:
 		"list-rooms":
@@ -78,6 +75,8 @@ func _on_data():
 			ready_game()
 		"begin":
 			start_game()
+		"back-to-lobby":
+			move_back_to_lobby()
 		_:
 			print(type + ": not supported")
 
@@ -86,14 +85,18 @@ func _process(_delta):
 	# Call this in _process or _physics_process. Data transfer, and signals
 	# emission will only happen when calling this function.
 	_client.poll()
-	
+
+
+func move_back_to_lobby():
+	current_room = "lobby"
+	emit_signal("back_to_lobby")
 
 
 func add_new_message(message):
 	chat.text +=message + '\n'
 
 
-func leave_room(room):
+func leave_room(room := current_room):
 	_client.get_peer(1).put_packet(JSON.print(
 		{
 			"type": "leave-room",
@@ -137,11 +140,13 @@ func create_game(name):
 			"payload": name
 		}
 	).to_utf8())
-	
+
+
 func add_old_rooms(rooms):
 	for room in rooms:
 		add_game_room(room)
-	
+
+
 func ready_game():
 	_client.get_peer(1).put_packet(JSON.print(
 		{

@@ -9,6 +9,8 @@ onready var incomeLabel := $MarginContainer/TopLine/IncomeLabel
 onready var prepTimerLabel := $MarginContainer/TopLine/PrepTimerLabel
 onready var prepTimer := $MarginContainer/TopLine/PrepTimerLabel/PrepTimer
 
+signal leave_room()
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	update_labels()
@@ -58,3 +60,7 @@ func start_prepTimer():
 func _on_PrepTimer_timeout():
 	earn_income()
 	prepTimer.start()
+
+
+func _on_Button_pressed():
+	emit_signal("leave_room")

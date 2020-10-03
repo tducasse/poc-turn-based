@@ -57,21 +57,12 @@ margin_right = 954.0
 margin_bottom = 126.0
 
 [node name="CreateGame" type="Button" parent="HSplitContainer/VSplitContainer/VSplitContainer/HSplitContainer"]
-margin_right = 471.0
-margin_bottom = 55.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_fonts/font = ExtResource( 3 )
-text = "Create game"
-
-[node name="JoinGame" type="Button" parent="HSplitContainer/VSplitContainer/VSplitContainer/HSplitContainer"]
-margin_left = 483.0
 margin_right = 954.0
 margin_bottom = 55.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 3 )
-text = "Join game"
+text = "Create game"
 
 [node name="WaitForServer" type="PopupPanel" parent="."]
 margin_right = 1920.0
@@ -94,7 +85,8 @@ text = "Waiting for server..."
 __meta__ = {
 "_edit_use_anchors_": false
 }
+[connection signal="back_to_lobby" from="HSplitContainer/Control" to="." method="_on_Control_back_to_lobby"]
 [connection signal="connected" from="HSplitContainer/Control" to="." method="_on_Control_connected"]
 [connection signal="item_activated" from="HSplitContainer/VSplitContainer/RoomList" to="." method="_on_ItemList_item_activated"]
+[connection signal="text_entered" from="HSplitContainer/VSplitContainer/VSplitContainer/RoomName" to="." method="_on_RoomName_text_entered"]
 [connection signal="pressed" from="HSplitContainer/VSplitContainer/VSplitContainer/HSplitContainer/CreateGame" to="." method="_on_CreateGame_pressed"]
-[connection signal="pressed" from="HSplitContainer/VSplitContainer/VSplitContainer/HSplitContainer/JoinGame" to="." method="_on_JoinGame_pressed"]

@@ -13,3 +13,4 @@ margin_bottom = 1071.0
 
 [node name="Shop" parent="." instance=ExtResource( 1 )]
 position = Vector2( -6.60394, -3.77551 )
+[connection signal="leave_room" from="UIContainer" to="." method="_on_UIContainer_leave_room"]
