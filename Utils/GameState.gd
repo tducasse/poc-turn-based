@@ -1,6 +1,5 @@
 extends Node
 
-var queue = preload("res://Utils/ThreadLoader.gd").new()
 var current_scene
 
 func _ready():
