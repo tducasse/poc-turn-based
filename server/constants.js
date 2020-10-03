@@ -11,4 +11,5 @@ export const EVENT_TYPES = {
   REGISTER_ADMIN: "register-admin",
   SEND_QUERY: "send-query",
   BACK_TO_LOBBY: "back-to-lobby",
+  REMOVE_ROOM: "remove-room",
 };

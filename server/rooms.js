@@ -34,6 +34,29 @@ const moveBackToLobby = (uuid) => {
   sendExistingRooms(user.socket);
 };
 
+// get the socket for everyone in a room
+const findEveryoneInRoom = (room) =>
+  db.users.find({ room }).map((el) => el.socket);
+
+// send a message to everyone in a room
+const sendToEveryone = ({ type, payload, room = "lobby" }) => {
+  findEveryoneInRoom(room).forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      sendMessage(client, { type, payload, room });
+    }
+  });
+};
+
+// removes a room and tells everyone it is removed
+const removeRoom = (name) => {
+  db.rooms.remove({ name });
+  sendToEveryone({
+    type: EVENT_TYPES.REMOVE_ROOM,
+    room: "lobby",
+    payload: name,
+  });
+};
+
 // Make the user `uuid` leave the room
 export const leaveRoom = (uuid, remove = false) => {
   const room = db.rooms.findOne({ users: uuid });
@@ -43,11 +66,12 @@ export const leaveRoom = (uuid, remove = false) => {
   }
   if (room.users.length === 1 && room.name !== "lobby") {
     // let's just remove the room then
-    db.rooms.remove({ users: uuid });
+    removeRoom(room.name);
     // if we're here because the user left the game
     if (remove) {
       db.users.remove({ uuid });
     } else {
+      // otherwise we're here because the user was the last one to leave a room
       moveBackToLobby(uuid);
     }
     return true;
@@ -66,21 +90,11 @@ export const leaveRoom = (uuid, remove = false) => {
   // if we're here because the user left the game
   if (remove) {
     db.users.remove({ uuid });
+  } else if (room.name !== "lobby") {
+    // we're here because we're moving back to the lobby, but not the last user in the room
+    moveBackToLobby(uuid);
   }
   return true;
-};
-
-// get the socket for everyone in a room
-const findEveryoneInRoom = (room) =>
-  db.users.find({ room }).map((el) => el.socket);
-
-// send a message to everyone in a room
-const sendToEveryone = ({ type, payload, room = "lobby" }) => {
-  findEveryoneInRoom(room).forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
-      sendMessage(client, { type, payload, room });
-    }
-  });
 };
 
 // get room name by user uuid

@@ -42,3 +42,11 @@ func _on_RoomName_text_entered(_new_text):
 func _on_Control_back_to_lobby():
 	rooms.clear()
 	GameState.restore_main_scene()
+
+
+func _on_Control_remove_room(room):
+	for i in range(rooms.get_item_count()):
+		var current = rooms.get_item_text(i)
+		if current == room:
+			rooms.remove_item(i)
+			break

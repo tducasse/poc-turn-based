@@ -14,6 +14,7 @@ signal on_start_game()
 signal connected()
 signal back_to_lobby()
 signal add_game_room(value)
+signal remove_room(value)
 
 var current_room = "lobby"
 
@@ -69,6 +70,8 @@ func _on_data():
 			add_old_rooms(payload)
 		"create-room":
 			add_game_room(payload)
+		"remove-room":
+			remove_room(payload)
 		"new-chat-message":
 			add_new_message(payload)
 		"ready-game":
@@ -85,6 +88,9 @@ func _process(_delta):
 	# Call this in _process or _physics_process. Data transfer, and signals
 	# emission will only happen when calling this function.
 	_client.poll()
+
+func remove_room(room):
+	emit_signal("remove_room", room)
 
 
 func move_back_to_lobby():
