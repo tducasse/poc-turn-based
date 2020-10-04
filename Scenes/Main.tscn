@@ -89,6 +89,8 @@ __meta__ = {
 [connection signal="connected" from="HSplitContainer/Control" to="." method="_on_Control_connected"]
 [connection signal="remove_room" from="HSplitContainer/Control" to="." method="_on_Control_remove_room"]
 [connection signal="restart_game" from="HSplitContainer/Control" to="." method="_on_Control_restart_game"]
+[connection signal="update_rooms" from="HSplitContainer/Control" to="." method="_on_Control_update_rooms"]
 [connection signal="item_activated" from="HSplitContainer/VSplitContainer/RoomList" to="." method="_on_ItemList_item_activated"]
+[connection signal="text_changed" from="HSplitContainer/VSplitContainer/VSplitContainer/RoomName" to="." method="_on_RoomName_text_changed"]
 [connection signal="text_entered" from="HSplitContainer/VSplitContainer/VSplitContainer/RoomName" to="." method="_on_RoomName_text_entered"]
 [connection signal="pressed" from="HSplitContainer/VSplitContainer/VSplitContainer/HSplitContainer/CreateGame" to="." method="_on_CreateGame_pressed"]

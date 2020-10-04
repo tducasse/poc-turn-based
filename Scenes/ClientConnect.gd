@@ -14,6 +14,7 @@ signal on_start_game()
 signal connected()
 signal back_to_lobby()
 signal add_game_room(value)
+signal update_rooms(rooms)
 signal remove_room(value)
 signal restart_game()
 
@@ -114,11 +115,11 @@ func leave_room(room := current_room):
 
 	
 func join_room(room):
-	current_room = room
+	current_room = room.split(' - ')[0]
 	_client.get_peer(1).put_packet(JSON.print(
 		{
 			"type": "join-room",
-			"payload": room
+			"payload": current_room
 		}
 	).to_utf8())
 
@@ -151,8 +152,7 @@ func create_game(name):
 
 
 func add_old_rooms(rooms):
-	for room in rooms:
-		add_game_room(room)
+	emit_signal("update_rooms", rooms)
 
 
 func ready_game():

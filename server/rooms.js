@@ -14,7 +14,7 @@ const listRooms = () =>
   db.rooms
     .find()
     .filter((el) => el.name !== "lobby")
-    .map((el) => el.name);
+    .map((el) => `${el.name}${el.users.length ? ` - ${el.users.length}` : ""}`);
 
 // send `client` all the existing rooms
 export const sendExistingRooms = (client) => {
@@ -42,7 +42,7 @@ const findEveryoneInRoom = (room) =>
 const sendToEveryone = ({ type, payload, room = "lobby" }) => {
   findEveryoneInRoom(room).forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
-      sendMessage(client, { type, payload, room });
+      sendMessage(client, { type, payload });
     }
   });
 };
@@ -54,6 +54,13 @@ const removeRoom = (name) => {
     type: EVENT_TYPES.REMOVE_ROOM,
     room: "lobby",
     payload: name,
+  });
+};
+
+const resyncRooms = () => {
+  sendToEveryone({
+    type: EVENT_TYPES.LIST_ROOMS,
+    payload: listRooms(),
   });
 };
 
@@ -94,6 +101,7 @@ export const leaveRoom = (uuid, remove = false) => {
     // we're here because we're moving back to the lobby, but not the last user in the room
     moveBackToLobby(uuid);
   }
+  resyncRooms();
   return true;
 };
 
@@ -122,7 +130,11 @@ export const setReady = (uuid) => {
   if (!name) {
     console.error(`setReady(): can't find room for ${uuid}`);
   }
-  db.rooms.update({ name }, { $push: { ready: uuid } });
+  const room = db.rooms.findOne({ name });
+  db.rooms.update(
+    { name },
+    { $set: { ready: Array.from(new Set([].concat(room.ready))) } }
+  );
   const updatedRoom = db.rooms.findOne({ name });
   if ((updatedRoom.ready || []).length === 2) {
     startGame(name);
@@ -165,8 +177,9 @@ export const joinRoom = (uuid, name) => {
   }
   db.users.update({ uuid }, { $set: { room: name } });
   db.rooms.update({ name }, { $push: { users: uuid } });
-  console.log(`${uuid} joined ${name}`);
   const updatedRoom = db.rooms.findOne({ name });
+  resyncRooms();
+  console.log(`${uuid} joined ${name}`);
   if (updatedRoom.users.length === 2) {
     readyGame(name);
   }

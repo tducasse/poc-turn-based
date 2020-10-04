@@ -1,8 +1,8 @@
 import { db } from "@tducasse/js-db";
 
 // send {type, payload, room} to `client`
-export const sendMessage = (client, { type, payload = true, room = "lobby" }) =>
-  client.send(JSON.stringify({ type, payload, room }));
+export const sendMessage = (client, { type, payload = true }) =>
+  client.send(JSON.stringify({ type, payload }));
 
 export const parseMessage = (message) => {
   let data;

@@ -27,6 +27,8 @@ func _on_CreateGame_pressed():
 	var name = game_name.text
 	if not name:
 		return
+	if "-" in name:
+		return
 	game_name.text = ""
 	client_connect.create_game(name)
 
@@ -44,10 +46,17 @@ func _on_Control_back_to_lobby():
 	GameState.restore_main_scene()
 
 
+func is_same_room(current, room):
+	var regex = RegEx.new()
+	regex.compile(room  + "( - \\d+)*")
+	var result = regex.search(current)
+	return result
+
+
 func _on_Control_remove_room(room):
 	for i in range(rooms.get_item_count()):
 		var current = rooms.get_item_text(i)
-		if current == room:
+		if is_same_room(current, room):
 			rooms.remove_item(i)
 			break
 
@@ -56,3 +65,15 @@ func _on_Control_restart_game():
 	if get_tree().current_scene.name != "Main":
 		GameState.restore_main_scene()
 	var _result = get_tree().reload_current_scene()
+
+
+func _on_RoomName_text_changed(new_text):
+	if "-" in new_text:
+		game_name.text = new_text.replace('-','_')
+		game_name.caret_position = game_name.text.length()
+
+
+func _on_Control_update_rooms(new_rooms):
+	rooms.clear()
+	for room in new_rooms:
+		on_room_added(room)
