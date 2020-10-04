@@ -90,16 +90,18 @@ ws.on("connection", (socket) => {
   updateAdminData();
 });
 
-// start a socket on 1337, connect to it with `npm run cli`
-net
-  .createServer((socket) => {
-    const r = repl.start({
-      prompt: "js-db>",
-      input: socket,
-      output: socket,
-      terminal: true,
-      preview: false,
-    });
-    r.context.db = db;
-  })
-  .listen(1337);
+if (process.env.NODE_ENV === "development") {
+  // start a socket on 1337, connect to it with `npm run cli`
+  net
+    .createServer((socket) => {
+      const r = repl.start({
+        prompt: "js-db>",
+        input: socket,
+        output: socket,
+        terminal: true,
+        preview: false,
+      });
+      r.context.db = db;
+    })
+    .listen(1337);
+}
