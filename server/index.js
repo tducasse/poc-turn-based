@@ -4,6 +4,7 @@ import express from "express";
 import { register, seed, db } from "@tducasse/js-db";
 import repl from "repl";
 import net from "net";
+import dispatch from "./dispatch";
 import store from "./store";
 import { registerAdmin, registerUser, updateAdminData } from "./users";
 import {
@@ -14,7 +15,7 @@ import {
   sendExistingRooms,
   setReady,
 } from "./rooms";
-import { parseMessage, sendQuery } from "./util";
+import { hasPrefix, parseMessage, sendQuery } from "./util";
 import { EVENT_TYPES } from "./constants";
 
 const PORT = process.env.PORT || 3000;
@@ -53,32 +54,36 @@ ws.on("connection", (socket) => {
 
   socket.on("message", (rawData) => {
     const { type, payload } = parseMessage(rawData);
-    switch (type) {
-      case EVENT_TYPES.NEW_CHAT_MESSAGE:
-        sendChatToRoom(uuid, payload);
-        break;
-      case EVENT_TYPES.READY_GAME:
-        setReady(uuid);
-        break;
-      case EVENT_TYPES.CREATE_ROOM:
-        // payload is room name
-        createRoom(payload);
-        break;
-      case EVENT_TYPES.JOIN_ROOM:
-        // payload is room name
-        joinRoom(uuid, payload);
-        break;
-      case EVENT_TYPES.LEAVE_ROOM:
-        leaveRoom(uuid);
-        break;
-      case EVENT_TYPES.REGISTER_ADMIN:
-        registerAdmin(uuid, socket);
-        break;
-      case EVENT_TYPES.SEND_QUERY:
-        sendQuery(uuid, payload);
-        break;
-      default:
-        console.log(`${type}: not supported`);
+    if (hasPrefix(type)) {
+      dispatch(type, uuid, payload);
+    } else {
+      switch (type) {
+        case EVENT_TYPES.NEW_CHAT_MESSAGE:
+          sendChatToRoom(uuid, payload);
+          break;
+        case EVENT_TYPES.READY_GAME:
+          setReady(uuid);
+          break;
+        case EVENT_TYPES.CREATE_ROOM:
+          // payload is room name
+          createRoom(payload);
+          break;
+        case EVENT_TYPES.JOIN_ROOM:
+          // payload is room name
+          joinRoom(uuid, payload);
+          break;
+        case EVENT_TYPES.LEAVE_ROOM:
+          leaveRoom(uuid);
+          break;
+        case EVENT_TYPES.REGISTER_ADMIN:
+          registerAdmin(uuid, socket);
+          break;
+        case EVENT_TYPES.SEND_QUERY:
+          sendQuery(uuid, payload);
+          break;
+        default:
+          console.log(`${type}: not supported`);
+      }
     }
     updateAdminData();
   });

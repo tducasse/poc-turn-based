@@ -30,3 +30,11 @@ export const sendQuery = (uuid, query) => {
   db[collection][operator](match, update);
   return true;
 };
+
+export const hasPrefix = (type) => {
+  return type.indexOf("/") >= 0;
+};
+
+export const unPrefix = (type) => {
+  return type.split("/");
+};
