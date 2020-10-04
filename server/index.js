@@ -1,7 +1,9 @@
 import WebSocket from "ws";
 import { v4 as uuidv4 } from "uuid";
 import express from "express";
-import { register, seed } from "@tducasse/js-db";
+import { register, seed, db } from "@tducasse/js-db";
+import repl from "repl";
+import net from "net";
 import store from "./store";
 import { registerAdmin, registerUser, updateAdminData } from "./users";
 import {
@@ -82,3 +84,17 @@ ws.on("connection", (socket) => {
   });
   updateAdminData();
 });
+
+// start a socket on 1337, connect to it with `npm run cli`
+net
+  .createServer((socket) => {
+    const r = repl.start({
+      prompt: "js-db>",
+      input: socket,
+      output: socket,
+      terminal: true,
+      preview: false,
+    });
+    r.context.db = db;
+  })
+  .listen(1337);
