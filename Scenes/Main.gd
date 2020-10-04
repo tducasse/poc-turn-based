@@ -50,3 +50,9 @@ func _on_Control_remove_room(room):
 		if current == room:
 			rooms.remove_item(i)
 			break
+
+
+func _on_Control_restart_game():
+	if get_tree().current_scene.name != "Main":
+		GameState.restore_main_scene()
+	var _result = get_tree().reload_current_scene()

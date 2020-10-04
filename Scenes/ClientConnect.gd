@@ -15,6 +15,7 @@ signal connected()
 signal back_to_lobby()
 signal add_game_room(value)
 signal remove_room(value)
+signal restart_game()
 
 var current_room = "lobby"
 
@@ -42,6 +43,7 @@ func _closed(was_clean = false):
 	# by the remote peer before closing the socket.
 	print("Closed, clean: ", was_clean)
 	set_process(false)
+	emit_signal("restart_game")
 
 
 func _connected(_protocol):
