@@ -40,8 +40,6 @@ func _ready():
 	_client.connect("connection_error", self, "_closed")
 	_client.connect("connection_established", self, "_connected")
 	_client.connect("data_received", self, "_on_data")
-	if ready:
-		init()
 
 
 func init():
