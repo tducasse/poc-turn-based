@@ -18,6 +18,7 @@ const TYPES = {
 	"GAME__START_GAME": "game__start_game",
 	"GAME__INIT_GAME": "game__init_game",
 	"GAME__BUY_ITEM": "game__buy_item",
+	"GAME__NEXT_ROUND": "game__next_round",
 }
 
 # just because we call them dynamically and godot yells
@@ -33,6 +34,7 @@ signal back_to_lobby(value)
 signal game__buy_item(value)
 signal game__start_game(value)
 signal game__init_game(value)
+signal game__next_round(value)
 
 # websocket internal events
 signal connected()

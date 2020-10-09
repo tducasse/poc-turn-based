@@ -1,6 +1,5 @@
-import WebSocket from "ws";
 import { db } from "@tducasse/js-db";
-import { sendMessage } from "./util";
+import { getRoomByUser, sendMessage, sendToEveryone } from "./util";
 import { EVENT_TYPES, STARTING_INCOME, STARTING_RESOURCES } from "./constants";
 
 const defaultRoomState = {
@@ -33,19 +32,6 @@ const moveBackToLobby = (uuid) => {
     type: EVENT_TYPES.BACK_TO_LOBBY,
   });
   sendExistingRooms(user.socket);
-};
-
-// get the socket for everyone in a room
-const findEveryoneInRoom = (room) =>
-  db.users.find({ room }).map((el) => el.socket);
-
-// send a message to everyone in a room
-const sendToEveryone = ({ type, payload, room = "lobby" }) => {
-  findEveryoneInRoom(room).forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
-      sendMessage(client, { type, payload });
-    }
-  });
 };
 
 // removes a room and tells everyone it is removed
@@ -106,9 +92,6 @@ export const leaveRoom = (uuid, remove = false) => {
   return true;
 };
 
-// get room name by user uuid
-const getRoomByUser = (uuid) => (db.users.findOne({ uuid }) || {}).room;
-
 // send a chat message to everyone in the room
 export const sendChatToRoom = (uuid, payload) => {
   sendToEveryone({
@@ -136,6 +119,7 @@ const initRoom = (name) => {
             {}
           ),
         },
+        ready: [],
       },
     }
   );
