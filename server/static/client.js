@@ -4,9 +4,9 @@ const socket = new WebSocket(
 );
 
 const EVENT_TYPES = {
-  REGISTER_ADMIN: "register-admin",
-  UPDATE_ADMIN_DATA: "update-admin-data",
-  SEND_QUERY: "send-query",
+  REGISTER_ADMIN: "register_admin",
+  UPDATE_ADMIN_DATA: "update_admin_data",
+  SEND_QUERY: "send_query",
 };
 
 // HELPERS

@@ -1,4 +1,6 @@
 import { db } from "@tducasse/js-db";
+import WebSocket from "ws";
+import { separator } from "./constants";
 
 // send {type, payload, room} to `client`
 export const sendMessage = (client, { type, payload = true }) =>
@@ -32,9 +34,27 @@ export const sendQuery = (uuid, query) => {
 };
 
 export const hasPrefix = (type) => {
-  return type.indexOf("/") >= 0;
+  return type.indexOf(separator) >= 0;
 };
 
 export const unPrefix = (type) => {
-  return type.split("/");
+  return type.split(separator);
+};
+
+// get the socket for everyone in a room
+export const findEveryoneInRoom = (room) =>
+  db.users.find({ room }).map((el) => el.socket);
+
+// send a message to everyone in a room
+export const sendToEveryone = ({ type, payload, room = "lobby" }) => {
+  findEveryoneInRoom(room).forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      sendMessage(client, { type, payload });
+    }
+  });
+};
+
+// get room name by user uuid
+export const getRoomByUser = (uuid) => {
+  return (db.users.findOne({ uuid }) || {}).room;
 };
