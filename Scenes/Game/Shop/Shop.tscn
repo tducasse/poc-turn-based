@@ -1,0 +1,60 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Fonts/Assurant-Standard.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Scenes/Game/Shop/Shop.gd" type="Script" id=2]
+
+[node name="Shop" type="TabContainer"]
+margin_top = 87.0
+margin_right = 1896.0
+margin_bottom = 963.0
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 1 )
+tab_align = 0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Income" type="Tabs" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 67.0
+margin_right = -4.0
+margin_bottom = -4.0
+
+[node name="ItemContainer" type="VBoxContainer" parent="Income"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Attack" type="Tabs" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 67.0
+margin_right = -4.0
+margin_bottom = -4.0
+
+[node name="ItemContainer" type="VBoxContainer" parent="Attack"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Defense" type="Tabs" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 67.0
+margin_right = -4.0
+margin_bottom = -4.0
+
+[node name="ItemContainer" type="VBoxContainer" parent="Defense"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}

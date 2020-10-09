@@ -14,6 +14,7 @@ const TYPES = {
 	"READY_GAME": "ready_game",
 	"BEGIN": "begin",
 	"BACK_TO_LOBBY": "back_to_lobby",
+	"BUY_ITEM": "buy_item",
 }
 
 # just because we call them dynamically and godot yells
