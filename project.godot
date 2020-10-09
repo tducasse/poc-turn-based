@@ -8,20 +8,25 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Control",
+"class": "NeedsServer",
+"language": "GDScript",
+"path": "res://Common/NeedsServer.gd"
+} ]
 _global_script_class_icons={
-
+"NeedsServer": ""
 }
 
 [application]
 
 config/name="projectv3"
-run/main_scene="res://Scenes/Main.tscn"
+run/main_scene="res://Scenes/Splash/SplashScreen.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
-GameState="*res://Utils/GameState.gd"
+WS="*res://Globals/WS.gd"
 
 [display]
 

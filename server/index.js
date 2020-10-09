@@ -14,6 +14,7 @@ import {
   sendChatToRoom,
   sendExistingRooms,
   setReady,
+  resyncRooms,
 } from "./rooms";
 import { hasPrefix, parseMessage, sendQuery } from "./util";
 import { EVENT_TYPES } from "./constants";
@@ -67,6 +68,9 @@ ws.on("connection", (socket) => {
         case EVENT_TYPES.CREATE_ROOM:
           // payload is room name
           createRoom(payload);
+          break;
+        case EVENT_TYPES.LIST_ROOMS:
+          resyncRooms();
           break;
         case EVENT_TYPES.JOIN_ROOM:
           // payload is room name
