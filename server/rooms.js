@@ -1,12 +1,13 @@
 import WebSocket from "ws";
 import { db } from "@tducasse/js-db";
 import { sendMessage } from "./util";
-import { EVENT_TYPES } from "./constants";
+import { EVENT_TYPES, STARTING_INCOME, STARTING_RESOURCES } from "./constants";
 
 const defaultRoomState = {
   name: "NEW_ROOM",
   users: [],
   ready: [],
+  state: {},
 };
 
 // get a list of all the existing rooms' names
@@ -57,7 +58,7 @@ const removeRoom = (name) => {
   });
 };
 
-const resyncRooms = () => {
+export const resyncRooms = () => {
   sendToEveryone({
     type: EVENT_TYPES.LIST_ROOMS,
     payload: listRooms(),
@@ -117,12 +118,44 @@ export const sendChatToRoom = (uuid, payload) => {
   });
 };
 
+const initRoom = (name) => {
+  const room = db.rooms.findOne({ name });
+  db.rooms.update(
+    { name },
+    {
+      $set: {
+        state: {
+          ...room.users.reduce(
+            (acc, curr) => ({
+              ...acc,
+              [curr]: {
+                resources: STARTING_RESOURCES,
+                income: STARTING_INCOME,
+              },
+            }),
+            {}
+          ),
+        },
+      },
+    }
+  );
+  room.users.forEach((uuid) => {
+    const { socket } = db.users.findOne({ uuid });
+    sendMessage(socket, {
+      type: EVENT_TYPES.GAME__INIT_GAME,
+      payload: { resources: STARTING_RESOURCES, income: STARTING_INCOME },
+    });
+  });
+};
+
 // tell the clients that the game should start
-const startGame = (room) =>
+const startGame = (room) => {
+  initRoom(room);
   sendToEveryone({
-    type: EVENT_TYPES.BEGIN,
+    type: EVENT_TYPES.GAME__START_GAME,
     room,
   });
+};
 
 // sets the ready flag for a user
 export const setReady = (uuid) => {
@@ -133,17 +166,12 @@ export const setReady = (uuid) => {
   const room = db.rooms.findOne({ name });
   db.rooms.update(
     { name },
-    { $set: { ready: Array.from(new Set([].concat(room.ready))) } }
+    { $set: { ready: Array.from(new Set([uuid].concat(room.ready))) } }
   );
   const updatedRoom = db.rooms.findOne({ name });
   if ((updatedRoom.ready || []).length === 2) {
     startGame(name);
   }
-};
-
-// ask the clients to tell the server if they're ready
-export const readyGame = (room) => {
-  sendToEveryone({ type: EVENT_TYPES.READY_GAME, room });
 };
 
 // create a new room `name`
@@ -177,11 +205,9 @@ export const joinRoom = (uuid, name) => {
   }
   db.users.update({ uuid }, { $set: { room: name } });
   db.rooms.update({ name }, { $push: { users: uuid } });
-  const updatedRoom = db.rooms.findOne({ name });
+  const { socket } = db.users.findOne({ uuid });
+  sendMessage(socket, { type: EVENT_TYPES.JOIN_ROOM, payload: name });
   resyncRooms();
   console.log(`${uuid} joined ${name}`);
-  if (updatedRoom.users.length === 2) {
-    readyGame(name);
-  }
   return true;
 };

@@ -8,13 +8,16 @@ var _client = WebSocketClient.new()
 # all websocket message types
 const TYPES = {
 	"LIST_ROOMS": "list_rooms",
+	"JOIN_ROOM": "join_room",
 	"CREATE_ROOM": "create_room",
 	"REMOVE_ROOM": "remove_room",
 	"NEW_CHAT_MESSAGE": "new_chat_message",
 	"READY_GAME": "ready_game",
-	"BEGIN": "begin",
 	"BACK_TO_LOBBY": "back_to_lobby",
-	"BUY_ITEM": "buy_item",
+	"LEAVE_ROOM": "leave_room",
+	"GAME__START_GAME": "game__start_game",
+	"GAME__INIT_GAME": "game__init_game",
+	"GAME__BUY_ITEM": "game__buy_item",
 }
 
 # just because we call them dynamically and godot yells
@@ -25,9 +28,11 @@ signal list_rooms(value)
 signal create_room(value)
 signal remove_room(value)
 signal new_chat_message(value)
-signal ready_game(value)
-signal begin(value)
+signal join_room(value)
 signal back_to_lobby(value)
+signal game__buy_item(value)
+signal game__start_game(value)
+signal game__init_game(value)
 
 # websocket internal events
 signal connected()
@@ -44,6 +49,8 @@ func _ready():
 
 
 func init():
+	if is_connected_to_server():
+		return
 	ready = true
 	set_process(true)
 	_client.connect_to_url(websocket_url)
@@ -90,6 +97,8 @@ func _process(_delta):
 	
 	
 func send_message(type, payload):
+	if not is_connected_to_server():
+		return
 	_client.get_peer(1).put_packet(JSON.print(
 		{
 			"type": type,

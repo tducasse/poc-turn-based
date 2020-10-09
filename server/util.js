@@ -1,4 +1,5 @@
 import { db } from "@tducasse/js-db";
+import { separator } from "./constants";
 
 // send {type, payload, room} to `client`
 export const sendMessage = (client, { type, payload = true }) =>
@@ -32,9 +33,9 @@ export const sendQuery = (uuid, query) => {
 };
 
 export const hasPrefix = (type) => {
-  return type.indexOf("/") >= 0;
+  return type.indexOf(separator) >= 0;
 };
 
 export const unPrefix = (type) => {
-  return type.split("/");
+  return type.split(separator);
 };

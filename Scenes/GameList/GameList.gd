@@ -5,10 +5,13 @@ onready var list = $ItemList
 onready var input := $GameName
 
 func _ready():
-	_connection = WS.connect("list_rooms", self, "_add_rooms")
-	_connection = WS.connect("create_room", self, "_add_one_room")
-	_connection = WS.connect("remove_room", self, "_remove_room")
+	_connection = WS.connect(WS.TYPES.LIST_ROOMS, self, "_add_rooms")
+	_connection = WS.connect(WS.TYPES.CREATE_ROOM, self, "_add_one_room")
+	_connection = WS.connect(WS.TYPES.REMOVE_ROOM, self, "_remove_room")
+	request_rooms()
 	
+func request_rooms():
+	WS.send_message(WS.TYPES.LIST_ROOMS, true)
 
 func _add_one_room(room):
 	list.add_item(room)
@@ -49,3 +52,7 @@ func _on_GameName_text_changed(new_text):
 	if "-" in new_text:
 		input.text = new_text.replace('-','_')
 		input.caret_position = input.text.length()
+
+
+func _on_ItemList_item_activated(index):
+	WS.send_message(WS.TYPES.JOIN_ROOM, list.get_item_text(index).split(' - ')[0])

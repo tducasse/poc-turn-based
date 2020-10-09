@@ -5,7 +5,7 @@ onready var messages := $Messages
 onready var input := $Input
 
 func _ready():
-	_connection = WS.connect("new_chat_message", self, "_add_message")
+	_connection = WS.connect(WS.TYPES.NEW_CHAT_MESSAGE, self, "_add_message")
 
 
 func _add_message(message):
