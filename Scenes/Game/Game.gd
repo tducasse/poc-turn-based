@@ -6,6 +6,9 @@ onready var timer_node = $VBoxContainer/TopLine/Timer
 onready var prep_timer = $PrepTimer
 onready var next_round_popup = $NextRoundPopup
 onready var ready_popup = $ReadyPopup
+onready var shop_container = $VBoxContainer/Shop
+onready var footer_container = $VBoxContainer/Footer
+onready var waiting = $VBoxContainer/Waiting
 
 var resources = 0
 var income = 0
@@ -18,6 +21,8 @@ func _ready():
 	_connection = WS.connect(WS.TYPES.GAME__START_GAME, self, "_start_game")
 	_connection = WS.connect(WS.TYPES.GAME__NEXT_ROUND, self, "_start_next_round")
 	_connection = WS.connect(WS.TYPES.BACK_TO_LOBBY, self, "_back_to_lobby")
+	shop_container.hide()
+	footer_container.hide()
 	ready_popup.show()
 	
 	
@@ -34,7 +39,7 @@ func _on_Leave_pressed():
 func _update_resources_income(value):
 	income = value.income
 	resources = value.resources
-	update_node_text(resources_node, "Resource: " + str(resources))
+	update_node_text(resources_node, "Resources: " + str(resources))
 	update_node_text(income_node, "Income: " + str(income))
 	
 	
@@ -47,6 +52,9 @@ func start_prepTimer():
 	
 
 func _start_game(_value):
+	waiting.hide()
+	shop_container.show()
+	footer_container.show()
 	prep_timer.start()
 
 func _process(_delta):
@@ -54,16 +62,23 @@ func _process(_delta):
 
 
 func _on_PrepTimer_timeout():
+	shop_container.hide()
+	footer_container.hide()
 	next_round_popup.show()
 	
 
 func _start_next_round(_value):
+	waiting.hide()
+	shop_container.show()
+	footer_container.show()
 	prep_timer.start()
 
 
 func _on_AcceptDialog_confirmed():
+	waiting.show()
 	WS.send_message(WS.TYPES.GAME__NEXT_ROUND, true)
 
 
 func _on_ReadyPopup_confirmed():
+	waiting.show()
 	WS.send_message(WS.TYPES.READY_GAME, true)

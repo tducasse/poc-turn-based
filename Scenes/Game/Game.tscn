@@ -32,7 +32,7 @@ margin_right = 629.0
 margin_bottom = 49.0
 size_flags_horizontal = 3
 custom_fonts/font = ExtResource( 1 )
-text = "Resources:"
+text = "Resources: 10"
 
 [node name="Timer" type="Label" parent="VBoxContainer/TopLine"]
 margin_left = 633.0
@@ -48,7 +48,7 @@ margin_right = 1896.0
 margin_bottom = 49.0
 size_flags_horizontal = 3
 custom_fonts/font = ExtResource( 1 )
-text = "Income:"
+text = "Income: 10"
 
 [node name="Spacer" type="Control" parent="VBoxContainer"]
 margin_top = 53.0
@@ -80,6 +80,16 @@ margin_right = 1896.0
 margin_bottom = 55.0
 custom_fonts/font = ExtResource( 1 )
 text = "Leave"
+
+[node name="Waiting" type="Label" parent="VBoxContainer"]
+visible = false
+margin_left = 689.0
+margin_top = 1007.0
+margin_right = 1206.0
+margin_bottom = 1056.0
+size_flags_horizontal = 4
+custom_fonts/font = ExtResource( 1 )
+text = "Waiting for your opponent..."
 
 [node name="PrepTimer" type="Timer" parent="."]
 wait_time = 20.0
