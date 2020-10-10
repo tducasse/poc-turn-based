@@ -44,11 +44,15 @@ export const registerAdmin = (uuid) => {
 };
 
 export const setNickname = (uuid, nickname) => {
+  let safeNickname = nickname;
   if (db.users.findOne({ nickname })) {
-    return false;
+    safeNickname = `${nickname}1`;
   }
-  db.users.update({ uuid }, { $set: { nickname } });
+  db.users.update({ uuid }, { $set: { nickname: safeNickname } });
   const { socket } = db.users.findOne({ uuid });
-  sendMessage(socket, { type: EVENT_TYPES.SET_NICKNAME, payload: nickname });
+  sendMessage(socket, {
+    type: EVENT_TYPES.SET_NICKNAME,
+    payload: safeNickname,
+  });
   return true;
 };

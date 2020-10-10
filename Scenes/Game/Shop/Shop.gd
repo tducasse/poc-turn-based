@@ -5,6 +5,8 @@ onready var attack_node =  $Attack/ItemContainer
 onready var defense_node =  $Defense/ItemContainer
 onready var income_node =  $Income/ItemContainer
 
+var buttons = []
+
 var items = [
 	{
 		"category": "income",
@@ -52,3 +54,14 @@ func add_item_to_category(item, category):
 	var shop_item = ShopItem.instance()
 	shop_item.init(item.label, item.cost, item.income)
 	root_node.add_child(shop_item)
+	buttons.append(shop_item)
+
+
+func lock():
+	for button in buttons:
+		button.disabled = true
+
+
+func unlock():
+	for button in buttons:
+		button.disabled = false

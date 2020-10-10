@@ -6,14 +6,16 @@ onready var timer_node = $VBoxContainer/TopLine/Timer
 onready var prep_timer = $PrepTimer
 onready var next_round_popup = $NextRoundPopup
 onready var ready_popup = $ReadyPopup
-onready var shop_container = $VBoxContainer/Shop
-onready var footer_container = $VBoxContainer/Footer
-onready var waiting = $VBoxContainer/Waiting
+onready var shop_container = $VBoxContainer/HSplitContainer/Shop
+onready var done = $VBoxContainer/Footer/Done
+onready var waiting = $VBoxContainer/Footer/Waiting
 
 var resources = 0
 var income = 0
 
 var _connection
+
+var waiting_text = "Waiting for your opponent..."
 
 func _ready():
 	_connection = WS.connect(WS.TYPES.GAME__BUY_ITEM, self, "_update_resources_income")
@@ -21,8 +23,7 @@ func _ready():
 	_connection = WS.connect(WS.TYPES.GAME__START_GAME, self, "_start_game")
 	_connection = WS.connect(WS.TYPES.GAME__NEXT_ROUND, self, "_start_next_round")
 	_connection = WS.connect(WS.TYPES.BACK_TO_LOBBY, self, "_back_to_lobby")
-	shop_container.hide()
-	footer_container.hide()
+	done.hide()
 	ready_popup.popup_centered()
 	
 	
@@ -52,9 +53,10 @@ func start_prepTimer():
 	
 
 func _start_game(_value):
-	waiting.hide()
+	unlock_shop()
+	waiting.text = ""
 	shop_container.show()
-	footer_container.show()
+	done.show()
 	prep_timer.start()
 
 
@@ -63,25 +65,34 @@ func _process(_delta):
 
 
 func _on_PrepTimer_timeout():
-	shop_container.hide()
-	footer_container.hide()
+	done.hide()
 	next_round_popup.popup_centered()
 
 
 func _start_next_round(_value):
-	waiting.hide()
-	shop_container.show()
-	footer_container.show()
+	unlock_shop()
+	waiting.text = ""
+	done.show()
 	prep_timer.start()
+	
+	
+func lock_shop():
+	shop_container.lock()
+	
+
+func unlock_shop():
+	shop_container.unlock()
 
 
 func _on_NextRoundPopup_confirmed():
-	waiting.show()
+	lock_shop()
+	waiting.text = waiting_text
 	WS.send_message(WS.TYPES.GAME__NEXT_ROUND, true)
 
 
 func _on_ReadyPopup_confirmed():
-	waiting.show()
+	lock_shop()
+	waiting.text = waiting_text
 	WS.send_message(WS.TYPES.READY_GAME, true)
 
 

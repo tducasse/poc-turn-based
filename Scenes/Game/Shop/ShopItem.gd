@@ -9,6 +9,7 @@ func init(lbl="Item", c=1, inc=1):
 	cost = c
 	income = inc
 	text = label + " { " + str(cost) + ", " + str(income) + " }"
+	disabled = true
 
 
 
