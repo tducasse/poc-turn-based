@@ -12,3 +12,7 @@ func _ready():
 func _join_room(_value):
 	if get_tree().change_scene("res://Scenes/Game/Game.tscn") != OK:
 		print("Lobby.join_room(): An unexpected error occurred")
+
+
+func _on_LineEdit_text_entered(new_text):
+	WS.set_nickname(new_text)

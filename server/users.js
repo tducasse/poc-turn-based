@@ -25,9 +25,12 @@ export const updateAdminData = () => {
       type: EVENT_TYPES.UPDATE_ADMIN_DATA,
       payload: {
         rooms: db.rooms.find(),
-        users: db.users
-          .find()
-          .map(({ uuid, isAdmin, room }) => ({ uuid, isAdmin, room })),
+        users: db.users.find().map(({ uuid, isAdmin, room, nickname }) => ({
+          uuid,
+          isAdmin,
+          room,
+          nickname,
+        })),
       },
     });
   });
@@ -38,4 +41,14 @@ export const updateAdminData = () => {
 export const registerAdmin = (uuid) => {
   db.users.update({ uuid }, { $set: { isAdmin: true } });
   updateAdminData();
+};
+
+export const setNickname = (uuid, nickname) => {
+  if (db.users.findOne({ nickname })) {
+    return false;
+  }
+  db.users.update({ uuid }, { $set: { nickname } });
+  const { socket } = db.users.findOne({ uuid });
+  sendMessage(socket, { type: EVENT_TYPES.SET_NICKNAME, payload: nickname });
+  return true;
 };

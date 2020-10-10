@@ -15,6 +15,7 @@ export const EVENT_TYPES = {
   GAME__BUY_ITEM: "game__buy_item",
   GAME__INIT_GAME: "game__init_game",
   GAME__NEXT_ROUND: "game__next_round",
+  SET_NICKNAME: "set_nickname",
 };
 
 export const separator = "__";

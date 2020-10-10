@@ -93,10 +93,11 @@ export const leaveRoom = (uuid, remove = false) => {
 };
 
 // send a chat message to everyone in the room
-export const sendChatToRoom = (uuid, payload) => {
+export const sendChatToRoom = (uuid, message) => {
+  const { nickname } = db.users.findOne({ uuid });
   sendToEveryone({
     type: EVENT_TYPES.NEW_CHAT_MESSAGE,
-    payload,
+    payload: { message, nickname },
     room: getRoomByUser(uuid),
   });
 };

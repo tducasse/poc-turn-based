@@ -6,7 +6,12 @@ import repl from "repl";
 import net from "net";
 import dispatch from "./dispatch";
 import store from "./store";
-import { registerAdmin, registerUser, updateAdminData } from "./users";
+import {
+  registerAdmin,
+  registerUser,
+  setNickname,
+  updateAdminData,
+} from "./users";
 import {
   createRoom,
   joinRoom,
@@ -84,6 +89,9 @@ ws.on("connection", (socket) => {
           break;
         case EVENT_TYPES.SEND_QUERY:
           sendQuery(uuid, payload);
+          break;
+        case EVENT_TYPES.SET_NICKNAME:
+          setNickname(uuid, payload);
           break;
         default:
           console.log(`${type}: not supported`);

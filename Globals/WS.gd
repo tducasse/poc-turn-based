@@ -5,6 +5,8 @@ var websocket_url = "ws://localhost:3000" if OS.is_debug_build() else "wss://pro
 
 var _client = WebSocketClient.new()
 
+
+
 # all websocket message types
 const TYPES = {
 	"LIST_ROOMS": "list_rooms",
@@ -19,6 +21,7 @@ const TYPES = {
 	"GAME__INIT_GAME": "game__init_game",
 	"GAME__BUY_ITEM": "game__buy_item",
 	"GAME__NEXT_ROUND": "game__next_round",
+	"SET_NICKNAME": "set_nickname",
 }
 
 # just because we call them dynamically and godot yells
@@ -35,12 +38,15 @@ signal game__buy_item(value)
 signal game__start_game(value)
 signal game__init_game(value)
 signal game__next_round(value)
+signal set_nickname(value)
 
 # websocket internal events
 signal connected()
 signal disconnected()
 
-var ready = false
+var nickname
+
+var _connection
 
 func _ready():
 	set_process(false)
@@ -48,12 +54,13 @@ func _ready():
 	_client.connect("connection_error", self, "_closed")
 	_client.connect("connection_established", self, "_connected")
 	_client.connect("data_received", self, "_on_data")
+	_connection = self.connect(TYPES.SET_NICKNAME, self, "_set_nickname")
+	nickname = OS.get_unix_time()
 
 
 func init():
 	if is_connected_to_server():
 		return
-	ready = true
 	set_process(true)
 	_client.connect_to_url(websocket_url)
 
@@ -62,6 +69,7 @@ func _closed(_was_clean=false):
 	emit_signal("disconnected")
 
 func _connected(_protocol):
+	set_nickname(nickname)
 	emit_signal("connected")
 
 
@@ -109,4 +117,11 @@ func send_message(type, payload):
 	).to_utf8())
 	
 	
+func set_nickname(nick):
+	send_message(TYPES.SET_NICKNAME, nick)
+	
 
+func _set_nickname(nick):
+	if not nick:
+		return
+	nickname = nick
