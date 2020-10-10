@@ -22,9 +22,9 @@ func _on_Input_text_entered(new_text):
 	input.text = ''
 
 
-func _on_Nickname_text_entered(new_text):
-	WS.set_nickname(new_text)
-
-
 func _update_nickname(value):
 	nickname_node.text = str(value)
+
+
+func _on_Nickname_focus_exited():
+	WS.set_nickname(nickname_node.text)
