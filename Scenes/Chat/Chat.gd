@@ -12,6 +12,7 @@ func _add_message(value):
 	var message = value.message
 	var nickname = value.nickname
 	messages.text += str(nickname) + ": " + message + '\n'
+	messages.scroll_vertical = INF
 	
 
 func _on_Input_text_entered(new_text):
