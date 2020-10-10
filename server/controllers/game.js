@@ -56,6 +56,7 @@ const nextRound = ({ uuid }) => {
   );
   const updatedRoom = db.rooms.findOne({ name });
   if ((updatedRoom.ready || []).length === 2) {
+    db.rooms.update({ name }, { $set: { ready: [] } });
     startNextRound(name);
   }
 };

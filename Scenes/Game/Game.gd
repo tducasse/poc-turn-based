@@ -23,7 +23,7 @@ func _ready():
 	_connection = WS.connect(WS.TYPES.BACK_TO_LOBBY, self, "_back_to_lobby")
 	shop_container.hide()
 	footer_container.hide()
-	ready_popup.show()
+	ready_popup.popup_centered()
 	
 	
 
@@ -57,6 +57,7 @@ func _start_game(_value):
 	footer_container.show()
 	prep_timer.start()
 
+
 func _process(_delta):
 	update_node_text(timer_node, str(round(prep_timer.time_left)))
 
@@ -64,8 +65,8 @@ func _process(_delta):
 func _on_PrepTimer_timeout():
 	shop_container.hide()
 	footer_container.hide()
-	next_round_popup.show()
-	
+	next_round_popup.popup_centered()
+
 
 func _start_next_round(_value):
 	waiting.hide()
@@ -74,7 +75,7 @@ func _start_next_round(_value):
 	prep_timer.start()
 
 
-func _on_AcceptDialog_confirmed():
+func _on_NextRoundPopup_confirmed():
 	waiting.show()
 	WS.send_message(WS.TYPES.GAME__NEXT_ROUND, true)
 
@@ -82,3 +83,8 @@ func _on_AcceptDialog_confirmed():
 func _on_ReadyPopup_confirmed():
 	waiting.show()
 	WS.send_message(WS.TYPES.READY_GAME, true)
+
+
+func _on_Done_pressed():
+	prep_timer.stop()
+	_on_PrepTimer_timeout()
