@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Fonts/Assurant-Standard.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Fonts/PixelSansSerif.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Scenes/Splash/SplashScreen.gd" type="Script" id=2]
 
 [node name="SplashScreen" type="CenterContainer"]
@@ -25,10 +25,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -67.0
-margin_top = -24.5
-margin_right = 67.0
-margin_bottom = 24.5
+margin_left = -81.0
+margin_top = -26.0
+margin_right = 81.0
+margin_bottom = 26.0
 custom_fonts/font = ExtResource( 1 )
 text = "ALDEVS"
 __meta__ = {

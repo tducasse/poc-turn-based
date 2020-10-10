@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://Fonts/Assurant-Standard.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Fonts/PixelSansSerif.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Scenes/Game/Shop/Shop.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/Game/Game.gd" type="Script" id=3]
 [ext_resource path="res://Scenes/Game/NextRoundPopup.gd" type="Script" id=4]
@@ -27,11 +27,11 @@ __meta__ = {
 
 [node name="TopLine" type="HBoxContainer" parent="VBoxContainer"]
 margin_right = 1896.0
-margin_bottom = 49.0
+margin_bottom = 52.0
 
 [node name="Resources" type="Label" parent="VBoxContainer/TopLine"]
 margin_right = 629.0
-margin_bottom = 49.0
+margin_bottom = 52.0
 size_flags_horizontal = 3
 custom_fonts/font = ExtResource( 1 )
 text = "Resources: 10"
@@ -39,7 +39,7 @@ text = "Resources: 10"
 [node name="Timer" type="Label" parent="VBoxContainer/TopLine"]
 margin_left = 633.0
 margin_right = 1262.0
-margin_bottom = 49.0
+margin_bottom = 52.0
 size_flags_horizontal = 3
 custom_fonts/font = ExtResource( 1 )
 align = 1
@@ -47,46 +47,49 @@ align = 1
 [node name="Income" type="Label" parent="VBoxContainer/TopLine"]
 margin_left = 1266.0
 margin_right = 1896.0
-margin_bottom = 49.0
+margin_bottom = 52.0
 size_flags_horizontal = 3
 custom_fonts/font = ExtResource( 1 )
 text = "Income: 10"
+align = 2
 
 [node name="Spacer" type="Control" parent="VBoxContainer"]
-margin_top = 53.0
+margin_top = 56.0
 margin_right = 1896.0
-margin_bottom = 83.0
+margin_bottom = 86.0
 rect_min_size = Vector2( 0, 30 )
 
 [node name="Shop" parent="VBoxContainer" instance=ExtResource( 2 )]
+margin_top = 90.0
+margin_bottom = 960.0
 
 [node name="Spacer2" type="Control" parent="VBoxContainer"]
-margin_top = 967.0
+margin_top = 964.0
 margin_right = 1896.0
-margin_bottom = 997.0
+margin_bottom = 994.0
 rect_min_size = Vector2( 0, 30 )
 
-[node name="Footer" type="HSplitContainer" parent="VBoxContainer"]
-margin_top = 1001.0
+[node name="Footer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 998.0
 margin_right = 1896.0
 margin_bottom = 1056.0
 
 [node name="Done" type="Button" parent="VBoxContainer/Footer"]
-margin_right = 158.0
-margin_bottom = 55.0
+margin_right = 184.0
+margin_bottom = 58.0
 custom_fonts/font = ExtResource( 1 )
 text = "I'm done"
 
 [node name="Pusher" type="Control" parent="VBoxContainer/Footer"]
-margin_left = 170.0
-margin_right = 1896.0
-margin_bottom = 55.0
+margin_left = 188.0
+margin_right = 1745.0
+margin_bottom = 58.0
 size_flags_horizontal = 3
 
 [node name="Leave" type="Button" parent="VBoxContainer/Footer"]
-margin_left = 1776.0
+margin_left = 1749.0
 margin_right = 1896.0
-margin_bottom = 55.0
+margin_bottom = 58.0
 custom_fonts/font = ExtResource( 1 )
 text = "Leave"
 

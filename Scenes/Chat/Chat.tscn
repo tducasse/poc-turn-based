@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Fonts/Assurant-Standard.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Fonts/PixelSansSerif.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Scenes/Chat/Chat.gd" type="Script" id=2]
 
 [node name="Chat" type="VBoxContainer"]
@@ -14,20 +14,21 @@ __meta__ = {
 
 [node name="Label" type="Label" parent="."]
 margin_right = 942.0
-margin_bottom = 49.0
+margin_bottom = 52.0
 custom_fonts/font = ExtResource( 1 )
 text = "Chat"
 
 [node name="Messages" type="TextEdit" parent="."]
-margin_top = 53.0
+margin_top = 56.0
 margin_right = 942.0
-margin_bottom = 993.0
+margin_bottom = 990.0
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 1 )
 readonly = true
+wrap_enabled = true
 
 [node name="Input" type="LineEdit" parent="."]
-margin_top = 997.0
+margin_top = 994.0
 margin_right = 942.0
 margin_bottom = 1056.0
 custom_fonts/font = ExtResource( 1 )

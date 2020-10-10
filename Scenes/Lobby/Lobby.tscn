@@ -3,7 +3,7 @@
 [ext_resource path="res://Scenes/Chat/Chat.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/GameList/GameList.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/Lobby/Lobby.gd" type="Script" id=3]
-[ext_resource path="res://Fonts/Assurant-Standard.tres" type="DynamicFont" id=4]
+[ext_resource path="res://Fonts/PixelSansSerif.tres" type="DynamicFont" id=4]
 
 [node name="Lobby" type="MarginContainer"]
 anchor_right = 1.0
@@ -23,11 +23,11 @@ margin_bottom = 1056.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 margin_right = 1896.0
-margin_bottom = 59.0
+margin_bottom = 62.0
 
 [node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
 margin_right = 946.0
-margin_bottom = 59.0
+margin_bottom = 62.0
 size_flags_horizontal = 3
 custom_fonts/font = ExtResource( 4 )
 placeholder_text = "Choose a nickname"
@@ -35,19 +35,19 @@ placeholder_text = "Choose a nickname"
 [node name="Pusher" type="Control" parent="VBoxContainer/HBoxContainer"]
 margin_left = 950.0
 margin_right = 1896.0
-margin_bottom = 59.0
+margin_bottom = 62.0
 size_flags_horizontal = 3
 
 [node name="HSplitContainer" type="HSplitContainer" parent="VBoxContainer"]
-margin_top = 63.0
+margin_top = 66.0
 margin_right = 1896.0
 margin_bottom = 1056.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Chat" parent="VBoxContainer/HSplitContainer" instance=ExtResource( 1 )]
-margin_bottom = 993.0
+margin_bottom = 990.0
 
 [node name="GameList" parent="VBoxContainer/HSplitContainer" instance=ExtResource( 2 )]
-margin_bottom = 993.0
+margin_bottom = 990.0
 [connection signal="text_entered" from="VBoxContainer/HBoxContainer/LineEdit" to="." method="_on_LineEdit_text_entered"]

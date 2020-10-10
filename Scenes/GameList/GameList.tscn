@@ -1,7 +1,8 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Fonts/Assurant-Standard.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Fonts/PixelSansSerif.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Scenes/GameList/GameList.gd" type="Script" id=2]
+
 
 [node name="GameList" type="VBoxContainer"]
 margin_left = 954.0
