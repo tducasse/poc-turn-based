@@ -6,7 +6,7 @@ var websocket_url = "ws://localhost:3000" if OS.is_debug_build() else "wss://pro
 var _client = WebSocketClient.new()
 
 var _timer
-var keep_alive_timeout = 10.0
+var keep_alive_timeout = 30.0
 
 # all websocket message types
 const TYPES = {

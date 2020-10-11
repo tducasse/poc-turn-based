@@ -20,7 +20,13 @@ import {
   setReady,
   resyncRooms,
 } from "./rooms";
-import { hasPrefix, parseMessage, sendChatToRoom, sendQuery } from "./util";
+import {
+  hasPrefix,
+  parseMessage,
+  sendChatToRoom,
+  sendQuery,
+  sendKeepAlive,
+} from "./util";
 import { EVENT_TYPES } from "./constants";
 
 const PORT = process.env.PORT || 3000;
@@ -94,6 +100,7 @@ ws.on("connection", (socket) => {
           break;
         case EVENT_TYPES.KEEP_ALIVE:
           // nothing to do here
+          sendKeepAlive(socket);
           break;
         default:
           console.log(`${type}: not supported`);
