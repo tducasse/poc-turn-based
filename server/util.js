@@ -1,6 +1,6 @@
 import { db } from "@tducasse/js-db";
 import WebSocket from "ws";
-import { EVENT_TYPES, separator } from "./constants";
+import { EVENT_TYPES, SEPARATOR } from "./constants";
 
 // send {type, payload, room} to `client`
 export const sendMessage = (client, { type, payload = true }) =>
@@ -34,11 +34,11 @@ export const sendQuery = (uuid, query) => {
 };
 
 export const hasPrefix = (type) => {
-  return type.indexOf(separator) >= 0;
+  return type.indexOf(SEPARATOR) >= 0;
 };
 
 export const unPrefix = (type) => {
-  return type.split(separator);
+  return type.split(SEPARATOR);
 };
 
 // get the socket for everyone in a room
@@ -85,4 +85,8 @@ export const sendServerMessageToRoom = (room, message) => {
     payload: { message, nickname: "SERVER" },
     room,
   });
+};
+
+export const sendKeepAlive = (client) => {
+  sendMessage(client, { type: EVENT_TYPES.KEEP_ALIVE, payload: true });
 };

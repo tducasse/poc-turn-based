@@ -20,8 +20,14 @@ import {
   setReady,
   resyncRooms,
 } from "./rooms";
-import { hasPrefix, parseMessage, sendChatToRoom, sendQuery } from "./util";
-import { EVENT_TYPES } from "./constants";
+import {
+  hasPrefix,
+  sendKeepAlive,
+  parseMessage,
+  sendChatToRoom,
+  sendQuery,
+} from "./util";
+import { EVENT_TYPES, KEEP_ALIVE_TIMEOUT } from "./constants";
 
 const PORT = process.env.PORT || 3000;
 
@@ -49,12 +55,18 @@ ws.on("connection", (socket) => {
   // let's tell them what happened before they joined
   sendExistingRooms(socket);
 
+  const keepAlive = setInterval(
+    () => sendKeepAlive(socket),
+    KEEP_ALIVE_TIMEOUT
+  );
+
   socket.on("close", () => {
     const remove = true;
     leaveRoom(uuid, remove);
     console.log("Disconnected");
     console.log(`Connected clients = ${ws.clients.size}`);
     updateAdminData();
+    clearInterval(keepAlive);
   });
 
   socket.on("message", (rawData) => {

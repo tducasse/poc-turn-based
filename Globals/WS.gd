@@ -22,6 +22,7 @@ const TYPES = {
 	"GAME__BUY_ITEM": "game__buy_item",
 	"GAME__NEXT_ROUND": "game__next_round",
 	"SET_NICKNAME": "set_nickname",
+	"KEEP_ALIVE": "keep_alive",
 }
 
 # just because we call them dynamically and godot yells
@@ -84,6 +85,10 @@ func _on_data():
 
 	var type :String = data.get("type")
 	var payload = data.get("payload")
+	
+	# no need to respond to this
+	if type == TYPES.KEEP_ALIVE:
+		return
 	
 	# automatically call the right signal
 	if TYPES.has(type.to_upper()):

@@ -16,9 +16,12 @@ export const EVENT_TYPES = {
   GAME__INIT_GAME: "game__init_game",
   GAME__NEXT_ROUND: "game__next_round",
   SET_NICKNAME: "set_nickname",
+  KEEP_ALIVE: "keep_alive",
 };
 
-export const separator = "__";
+export const SEPARATOR = "__";
+
+export const KEEP_ALIVE_TIMEOUT = 3000;
 
 export const STARTING = {
   RESOURCES: 10,
