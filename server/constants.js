@@ -17,6 +17,8 @@ export const EVENT_TYPES = {
   GAME__NEXT_ROUND: "game__next_round",
   SET_NICKNAME: "set_nickname",
   KEEP_ALIVE: "keep_alive",
+  OPPONENT_LEFT: "opponent_left",
+  GAME_OVER: "game_over",
 };
 
 export const SEPARATOR = "__";

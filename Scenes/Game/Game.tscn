@@ -3,8 +3,8 @@
 [ext_resource path="res://Fonts/PixelSansSerif.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Scenes/Game/Shop/Shop.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/Game/Game.gd" type="Script" id=3]
-[ext_resource path="res://Scenes/Game/NextRoundPopup.gd" type="Script" id=4]
-[ext_resource path="res://Scenes/Game/ReadyPopup.gd" type="Script" id=5]
+[ext_resource path="res://Scenes/Game/AcceptDialog.gd" type="Script" id=4]
+[ext_resource path="res://Scenes/Game/GameOver.gd" type="Script" id=5]
 [ext_resource path="res://Scenes/Chat/Chat.tscn" type="PackedScene" id=6]
 
 [node name="Game" type="MarginContainer"]
@@ -133,6 +133,30 @@ window_title = ""
 dialog_text = "Ready for the next round?"
 script = ExtResource( 4 )
 
+[node name="OpponentLeft" type="AcceptDialog" parent="."]
+margin_left = 823.0
+margin_top = 499.0
+margin_right = 1072.0
+margin_bottom = 557.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+popup_exclusive = true
+window_title = ""
+dialog_text = "Your opponent left. Leave the game?"
+script = ExtResource( 4 )
+
+[node name="GameOver" type="ConfirmationDialog" parent="."]
+margin_left = 848.0
+margin_top = 493.0
+margin_right = 1048.0
+margin_bottom = 563.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+popup_exclusive = true
+window_title = ""
+dialog_text = "Game over! Play again?"
+script = ExtResource( 5 )
+
 [node name="ReadyPopup" type="AcceptDialog" parent="."]
 margin_left = 893.0
 margin_top = 499.0
@@ -143,9 +167,11 @@ size_flags_vertical = 4
 popup_exclusive = true
 window_title = ""
 dialog_text = "Are you ready?"
-script = ExtResource( 5 )
+script = ExtResource( 4 )
 [connection signal="pressed" from="VBoxContainer/Footer/Done" to="." method="_on_Done_pressed"]
 [connection signal="pressed" from="VBoxContainer/Footer/Leave" to="." method="_on_Leave_pressed"]
 [connection signal="timeout" from="PrepTimer" to="." method="_on_PrepTimer_timeout"]
 [connection signal="confirmed" from="NextRoundPopup" to="." method="_on_NextRoundPopup_confirmed"]
+[connection signal="confirmed" from="OpponentLeft" to="." method="_on_OpponentLeft_confirmed"]
+[connection signal="confirmed" from="GameOver" to="." method="_on_GameOver_confirmed"]
 [connection signal="confirmed" from="ReadyPopup" to="." method="_on_ReadyPopup_confirmed"]

@@ -22,6 +22,8 @@ const TYPES = {
 	"GAME__NEXT_ROUND": "game__next_round",
 	"SET_NICKNAME": "set_nickname",
 	"KEEP_ALIVE": "keep_alive",
+	"GAME_OVER": "game_over",
+	"OPPONENT_LEFT": "opponent_left",
 }
 
 # just because we call them dynamically and godot yells
@@ -39,6 +41,8 @@ signal game__start_game(value)
 signal game__init_game(value)
 signal game__next_round(value)
 signal set_nickname(value)
+signal game_over(value)
+signal opponent_left(value)
 
 # websocket internal events
 signal connected()

@@ -6,10 +6,13 @@ onready var health_node = $VBoxContainer/TopLine/Health
 onready var timer_node = $VBoxContainer/TopLine/Timer
 onready var prep_timer = $PrepTimer
 onready var next_round_popup = $NextRoundPopup
+onready var opponent_left_popup = $OpponentLeft
+onready var game_over_popup = $GameOver
 onready var ready_popup = $ReadyPopup
 onready var shop_container = $VBoxContainer/HSplitContainer/Shop
 onready var done = $VBoxContainer/Footer/Done
 onready var waiting = $VBoxContainer/Footer/Waiting
+onready var chat = $VBoxContainer/HSplitContainer/Chat
 
 var resources = 0
 var income = 0
@@ -25,6 +28,9 @@ func _ready():
 	_connection = WS.connect(WS.TYPES.GAME__START_GAME, self, "_start_game")
 	_connection = WS.connect(WS.TYPES.GAME__NEXT_ROUND, self, "_start_next_round")
 	_connection = WS.connect(WS.TYPES.BACK_TO_LOBBY, self, "_back_to_lobby")
+	_connection = WS.connect(WS.TYPES.OPPONENT_LEFT, self, "_opponent_left")
+	_connection = WS.connect(WS.TYPES.GAME_OVER, self, "_game_over")
+	_connection = game_over_popup.get_cancel().connect("pressed", self, "_on_Leave_pressed")
 	done.hide()
 	ready_popup.popup_centered()
 	
@@ -103,3 +109,20 @@ func _on_ReadyPopup_confirmed():
 func _on_Done_pressed():
 	prep_timer.stop()
 	_on_PrepTimer_timeout()
+
+
+func _opponent_left(_value):
+	opponent_left_popup.popup_centered()
+
+
+func _on_OpponentLeft_confirmed():
+	_on_Leave_pressed()
+
+
+func _game_over(_value):
+	game_over_popup.popup_centered()
+
+
+func _on_GameOver_confirmed():
+	_on_ReadyPopup_confirmed()
+	chat.reset_messages()

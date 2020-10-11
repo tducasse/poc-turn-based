@@ -47,15 +47,25 @@ const getNewHealth = (health, attack, defense) =>
 
 const getNewIncome = (resources, income) => resources + (income || 0);
 
-const getRoundSummary = (name) =>
-  [""]
+const getRoundSummary = (name) => {
+  let gameOver = false;
+  const summary = [""]
     .concat(
       Object.entries(db.rooms.findOne({ name }).state).map(
-        ([uuid, userState]) =>
-          `- ${db.users.findOne({ uuid }).nickname}: ${userState.health}HP`
+        ([uuid, userState]) => {
+          gameOver = gameOver || !userState.health;
+          return `- ${db.users.findOne({ uuid }).nickname}: ${
+            userState.health
+          }HP`;
+        }
       )
     )
     .join("\n");
+  return {
+    summary,
+    gameOver,
+  };
+};
 
 const runFightPhase = (name) => {
   const { state } = db.rooms.findOne({ name });
@@ -93,13 +103,16 @@ const runFightPhase = (name) => {
   sendNextUserState(firstUuid);
   sendNextUserState(secondUuid);
 
-  const roundMessage = getRoundSummary(name);
-  sendServerMessageToRoom(name, roundMessage);
+  const { summary, gameOver } = getRoundSummary(name);
+  sendServerMessageToRoom(name, summary);
   sendToEveryone({
     type: EVENT_TYPES.GAME__NEXT_ROUND,
     payload: true,
     room: name,
   });
+  if (gameOver) {
+    sendToEveryone({ type: EVENT_TYPES.GAME_OVER, paylaod: true, room: name });
+  }
 };
 
 const nextRound = ({ uuid }) => {

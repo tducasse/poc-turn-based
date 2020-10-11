@@ -44,6 +44,15 @@ const removeRoom = (name) => {
   });
 };
 
+export const tellOthersLeft = (name) => {
+  db.rooms.findOne({ name }).users.forEach((uuid) =>
+    sendMessage(db.users.findOne({ uuid }).socket, {
+      type: EVENT_TYPES.OPPONENT_LEFT,
+      payload: true,
+    })
+  );
+};
+
 export const resyncRooms = () => {
   sendToEveryone({
     type: EVENT_TYPES.LIST_ROOMS,
@@ -85,6 +94,7 @@ export const leaveRoom = (uuid, remove = false) => {
   if (remove) {
     db.users.remove({ uuid });
   } else if (room.name !== "lobby") {
+    tellOthersLeft(room.name);
     // we're here because we're moving back to the lobby, but not the last user in the room
     moveBackToLobby(uuid);
   }
@@ -111,7 +121,7 @@ const initRoom = (name) => {
               ...acc,
               // has to be spread, because otherwise it's the same object reference
               // and we don't want the two users to share the same resources, income, etc
-              // inherent to way we handle the database
+              // inherent to the way we handle the database
               [curr]: { ...startingVals },
             }),
             {}
