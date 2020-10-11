@@ -1,6 +1,6 @@
 import { db } from "@tducasse/js-db";
 import { getRoomByUser, sendMessage, sendToEveryone } from "./util";
-import { EVENT_TYPES, STARTING_INCOME, STARTING_RESOURCES } from "./constants";
+import { EVENT_TYPES, STARTING } from "./constants";
 
 const defaultRoomState = {
   name: "NEW_ROOM",
@@ -92,18 +92,15 @@ export const leaveRoom = (uuid, remove = false) => {
   return true;
 };
 
-// send a chat message to everyone in the room
-export const sendChatToRoom = (uuid, message) => {
-  const { nickname } = db.users.findOne({ uuid });
-  sendToEveryone({
-    type: EVENT_TYPES.NEW_CHAT_MESSAGE,
-    payload: { message, nickname },
-    room: getRoomByUser(uuid),
-  });
-};
-
 const initRoom = (name) => {
   const room = db.rooms.findOne({ name });
+  const startingVals = {
+    resources: STARTING.RESOURCES,
+    income: STARTING.INCOME,
+    attack: STARTING.ATTACK,
+    defense: STARTING.DEFENSE,
+    health: STARTING.HEALTH,
+  };
   db.rooms.update(
     { name },
     {
@@ -112,10 +109,10 @@ const initRoom = (name) => {
           ...room.users.reduce(
             (acc, curr) => ({
               ...acc,
-              [curr]: {
-                resources: STARTING_RESOURCES,
-                income: STARTING_INCOME,
-              },
+              // has to be spread, because otherwise it's the same object reference
+              // and we don't want the two users to share the same resources, income, etc
+              // inherent to way we handle the database
+              [curr]: { ...startingVals },
             }),
             {}
           ),
@@ -128,7 +125,7 @@ const initRoom = (name) => {
     const { socket } = db.users.findOne({ uuid });
     sendMessage(socket, {
       type: EVENT_TYPES.GAME__INIT_GAME,
-      payload: { resources: STARTING_RESOURCES, income: STARTING_INCOME },
+      payload: startingVals,
     });
   });
 };

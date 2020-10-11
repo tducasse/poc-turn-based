@@ -1,6 +1,6 @@
 import { db } from "@tducasse/js-db";
 import WebSocket from "ws";
-import { separator } from "./constants";
+import { EVENT_TYPES, separator } from "./constants";
 
 // send {type, payload, room} to `client`
 export const sendMessage = (client, { type, payload = true }) =>
@@ -57,4 +57,32 @@ export const sendToEveryone = ({ type, payload, room = "lobby" }) => {
 // get room name by user uuid
 export const getRoomByUser = (uuid) => {
   return (db.users.findOne({ uuid }) || {}).room;
+};
+
+export const clamp = (num, min, max) => {
+  if (num <= min) {
+    return min;
+  }
+  if (num >= max) {
+    return max;
+  }
+  return num;
+};
+
+// send a chat message to everyone in the room
+export const sendChatToRoom = (uuid, message) => {
+  const { nickname } = db.users.findOne({ uuid });
+  sendToEveryone({
+    type: EVENT_TYPES.NEW_CHAT_MESSAGE,
+    payload: { message, nickname },
+    room: getRoomByUser(uuid),
+  });
+};
+
+export const sendServerMessageToRoom = (room, message) => {
+  sendToEveryone({
+    type: EVENT_TYPES.NEW_CHAT_MESSAGE,
+    payload: { message, nickname: "SERVER" },
+    room,
+  });
 };

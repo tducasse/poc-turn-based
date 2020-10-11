@@ -12,19 +12,44 @@ var items = [
 		"category": "income",
 		"items": [
 			{
-				"label": "Unit 1",
+				"label": "1 point",
 				"cost": 1,
-				"income": 1 
+				"income": 1
 			},
 			{
-				"label": "Unit 2",
+				"label": "2 points",
 				"cost": 2,
-				"income": 1 
+				"income": 2
+			}
+		]
+	},
+	{
+		"category": "attack",
+		"items": [
+			{
+				"label": "1 point",
+				"cost": 1,
+				"attack": 1
 			},
 			{
-				"label": "Unit 3",
-				"cost": 3,
-				"income": 2 
+				"label": "2 points",
+				"cost": 2,
+				"attack": 2
+			}
+		]
+	},
+	{
+		"category": "defense",
+		"items": [
+			{
+				"label": "1 point",
+				"cost": 1,
+				"defense": 1
+			},
+			{
+				"label": "2 points",
+				"cost": 2,
+				"defense": 2
 			}
 		]
 	}
@@ -52,7 +77,7 @@ func add_item_to_category(item, category):
 	if not root_node:
 		return
 	var shop_item = ShopItem.instance()
-	shop_item.init(item.label, item.cost, item.income)
+	shop_item.init(category, item)
 	root_node.add_child(shop_item)
 	buttons.append(shop_item)
 

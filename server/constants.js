@@ -20,6 +20,10 @@ export const EVENT_TYPES = {
 
 export const separator = "__";
 
-export const STARTING_RESOURCES = 10;
-
-export const STARTING_INCOME = 10;
+export const STARTING = {
+  RESOURCES: 10,
+  INCOME: 10,
+  ATTACK: 0,
+  DEFENSE: 0,
+  HEALTH: 25,
+};

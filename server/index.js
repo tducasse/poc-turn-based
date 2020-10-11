@@ -16,12 +16,11 @@ import {
   createRoom,
   joinRoom,
   leaveRoom,
-  sendChatToRoom,
   sendExistingRooms,
   setReady,
   resyncRooms,
 } from "./rooms";
-import { hasPrefix, parseMessage, sendQuery } from "./util";
+import { hasPrefix, parseMessage, sendChatToRoom, sendQuery } from "./util";
 import { EVENT_TYPES } from "./constants";
 
 const PORT = process.env.PORT || 3000;

@@ -30,28 +30,35 @@ __meta__ = {
 margin_right = 1896.0
 margin_bottom = 52.0
 
-[node name="Resources" type="Label" parent="VBoxContainer/TopLine"]
-margin_right = 629.0
+[node name="Health" type="Label" parent="VBoxContainer/TopLine"]
+margin_right = 471.0
 margin_bottom = 52.0
 size_flags_horizontal = 3
 custom_fonts/font = ExtResource( 1 )
-text = "Resources: 10"
+text = "HP:"
 
-[node name="Timer" type="Label" parent="VBoxContainer/TopLine"]
-margin_left = 633.0
-margin_right = 1262.0
+[node name="Resources" type="Label" parent="VBoxContainer/TopLine"]
+margin_left = 475.0
+margin_right = 946.0
 margin_bottom = 52.0
 size_flags_horizontal = 3
 custom_fonts/font = ExtResource( 1 )
-align = 1
+text = "Resources:"
 
 [node name="Income" type="Label" parent="VBoxContainer/TopLine"]
-margin_left = 1266.0
+margin_left = 950.0
+margin_right = 1421.0
+margin_bottom = 52.0
+size_flags_horizontal = 3
+custom_fonts/font = ExtResource( 1 )
+text = "Income:"
+
+[node name="Timer" type="Label" parent="VBoxContainer/TopLine"]
+margin_left = 1425.0
 margin_right = 1896.0
 margin_bottom = 52.0
 size_flags_horizontal = 3
 custom_fonts/font = ExtResource( 1 )
-text = "Income: 10"
 align = 2
 
 [node name="Spacer" type="Control" parent="VBoxContainer"]
@@ -115,17 +122,15 @@ wait_time = 20.0
 one_shot = true
 
 [node name="NextRoundPopup" type="AcceptDialog" parent="."]
-margin_left = 840.0
-margin_top = 482.0
-margin_right = 1056.0
-margin_bottom = 574.0
+margin_left = 858.0
+margin_top = 499.0
+margin_right = 1037.0
+margin_bottom = 557.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 popup_exclusive = true
 window_title = ""
-dialog_text = "Ready for the next round?
-
-Click here to earn your income!"
+dialog_text = "Ready for the next round?"
 script = ExtResource( 4 )
 
 [node name="ReadyPopup" type="AcceptDialog" parent="."]

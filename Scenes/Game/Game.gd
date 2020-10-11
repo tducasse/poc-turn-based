@@ -2,6 +2,7 @@ extends MarginContainer
 
 onready var resources_node = $VBoxContainer/TopLine/Resources
 onready var income_node = $VBoxContainer/TopLine/Income
+onready var health_node = $VBoxContainer/TopLine/Health
 onready var timer_node = $VBoxContainer/TopLine/Timer
 onready var prep_timer = $PrepTimer
 onready var next_round_popup = $NextRoundPopup
@@ -12,6 +13,7 @@ onready var waiting = $VBoxContainer/Footer/Waiting
 
 var resources = 0
 var income = 0
+var health = 0
 
 var _connection
 
@@ -40,8 +42,10 @@ func _on_Leave_pressed():
 func _update_resources_income(value):
 	income = value.income
 	resources = value.resources
+	health = value.health
 	update_node_text(resources_node, "Resources: " + str(resources))
 	update_node_text(income_node, "Income: " + str(income))
+	update_node_text(health_node, "HP: " + str(health))
 	
 	
 func update_node_text(node, text):

@@ -1,32 +1,100 @@
 import { db } from "@tducasse/js-db";
-import { EVENT_TYPES } from "../constants";
-import { getRoomByUser, sendMessage, sendToEveryone } from "../util";
+import { EVENT_TYPES, STARTING } from "../constants";
+import {
+  clamp,
+  getRoomByUser,
+  sendMessage,
+  sendServerMessageToRoom,
+  sendToEveryone,
+} from "../util";
 
-const sendNewIncomeAndResources = (uuid) => {
-  const { income, resources } = db.rooms.findOne({ users: uuid }).state[uuid];
+const sendNextUserState = (uuid) => {
+  const { income, resources, attack, defense, health } = db.rooms.findOne({
+    users: uuid,
+  }).state[uuid];
   const { socket } = db.users.findOne({ uuid });
   sendMessage(socket, {
     type: EVENT_TYPES.GAME__BUY_ITEM,
-    payload: { resources, income },
+    payload: { resources, income, attack, defense, health },
   });
 };
 
 const buyItem = ({ uuid, payload }) => {
-  const { cost, income } = payload;
+  const { type, cost } = payload;
+  const toAdd = payload[type];
+  if (!toAdd) {
+    return false;
+  }
   const previous = db.rooms.findOne({ users: uuid }).state[uuid];
+  if (previous.resources < cost) {
+    return false;
+  }
   db.rooms.update(
     { users: uuid },
     {
       $set: {
         [`state.${uuid}.resources`]: previous.resources - cost,
-        [`state.${uuid}.income`]: previous.income + income,
+        [`state.${uuid}.${type}`]: (previous[type] || 0) + toAdd,
       },
     }
   );
-  sendNewIncomeAndResources(uuid);
+  sendNextUserState(uuid);
+  return true;
 };
 
-const startNextRound = (name) => {
+const getNewHealth = (health, attack, defense) =>
+  clamp(health - (attack || 0) + (defense || 0), 0, health);
+
+const getNewIncome = (resources, income) => resources + (income || 0);
+
+const getRoundSummary = (name) =>
+  [""]
+    .concat(
+      Object.entries(db.rooms.findOne({ name }).state).map(
+        ([uuid, userState]) =>
+          `- ${db.users.findOne({ uuid }).nickname}: ${userState.health}HP`
+      )
+    )
+    .join("\n");
+
+const runFightPhase = (name) => {
+  const { state } = db.rooms.findOne({ name });
+  const [firstUuid, firstState] = Object.entries(state)[0];
+  const [secondUuid, secondState] = Object.entries(state)[1];
+  db.rooms.update(
+    { name },
+    {
+      $set: {
+        [`state.${firstUuid}.resources`]: getNewIncome(
+          firstState.resources,
+          firstState.income
+        ),
+        [`state.${firstUuid}.health`]: getNewHealth(
+          firstState.health,
+          secondState.attack,
+          firstState.defense
+        ),
+        [`state.${secondUuid}.resources`]: getNewIncome(
+          secondState.resources,
+          secondState.income
+        ),
+        [`state.${secondUuid}.health`]: getNewHealth(
+          secondState.health,
+          firstState.attack,
+          secondState.defense
+        ),
+        [`state.${secondUuid}.attack`]: STARTING.ATTACK,
+        [`state.${secondUuid}.defense`]: STARTING.DEFENSE,
+        [`state.${firstUuid}.attack`]: STARTING.ATTACK,
+        [`state.${firstUuid}.defense`]: STARTING.DEFENSE,
+      },
+    }
+  );
+  sendNextUserState(firstUuid);
+  sendNextUserState(secondUuid);
+
+  const roundMessage = getRoundSummary(name);
+  sendServerMessageToRoom(name, roundMessage);
   sendToEveryone({
     type: EVENT_TYPES.GAME__NEXT_ROUND,
     payload: true,
@@ -34,18 +102,8 @@ const startNextRound = (name) => {
   });
 };
 
-const earnIncome = (name, uuid) => {
-  const { resources, income } = db.rooms.findOne({ name }).state[uuid];
-  db.rooms.update(
-    { name },
-    { $set: { [`state.${uuid}.resources`]: resources + income } }
-  );
-  sendNewIncomeAndResources(uuid);
-};
-
 const nextRound = ({ uuid }) => {
   const name = getRoomByUser(uuid);
-  earnIncome(name, uuid);
   if (!name) {
     console.error(`nextRound(): can't find room for ${uuid}`);
   }
@@ -57,7 +115,7 @@ const nextRound = ({ uuid }) => {
   const updatedRoom = db.rooms.findOne({ name });
   if ((updatedRoom.ready || []).length === 2) {
     db.rooms.update({ name }, { $set: { ready: [] } });
-    startNextRound(name);
+    runFightPhase(name);
   }
 };
 
