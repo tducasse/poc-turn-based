@@ -28,3 +28,5 @@ export const STARTING = {
   DEFENSE: 0,
   HEALTH: 25,
 };
+
+export const KEEP_ALIVE_TIMEOUT = 30000;

@@ -6,7 +6,7 @@ var websocket_url = "ws://localhost:3000" if OS.is_debug_build() else "wss://pro
 var _client = WebSocketClient.new()
 
 var _timer
-var keep_alive_timeout = 15.0
+var keep_alive_timeout = 30.0
 
 # all websocket message types
 const TYPES = {
@@ -106,8 +106,9 @@ func _on_data():
 	var type :String = data.get("type")
 	var payload = data.get("payload")
 	
-	# no need to respond to this
 	if type == TYPES.KEEP_ALIVE:
+		# have to send this back if we're on another tab
+		send_message(TYPES.KEEP_ALIVE, true)
 		return
 	
 	# automatically call the right signal

@@ -27,7 +27,7 @@ import {
   sendQuery,
   sendKeepAlive,
 } from "./util";
-import { EVENT_TYPES } from "./constants";
+import { EVENT_TYPES, KEEP_ALIVE_TIMEOUT } from "./constants";
 
 const PORT = process.env.PORT || 3000;
 
@@ -100,6 +100,7 @@ ws.on("connection", (socket) => {
           break;
         case EVENT_TYPES.KEEP_ALIVE:
           // nothing to do here
+          setTimeout(() => sendKeepAlive(socket), KEEP_ALIVE_TIMEOUT);
           sendKeepAlive(socket);
           break;
         default:
