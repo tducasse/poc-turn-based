@@ -52,6 +52,8 @@ ws.on("connection", (socket) => {
   console.log(`New connection`);
   console.log(`Connected clients = ${ws.clients.size}`);
 
+  let timeout;
+
   // let's tell them what happened before they joined
   sendExistingRooms(socket);
 
@@ -61,6 +63,9 @@ ws.on("connection", (socket) => {
     console.log("Disconnected");
     console.log(`Connected clients = ${ws.clients.size}`);
     updateAdminData();
+    if (timeout) {
+      clearTimeout(timeout);
+    }
   });
 
   socket.on("message", (rawData) => {
@@ -100,8 +105,7 @@ ws.on("connection", (socket) => {
           break;
         case EVENT_TYPES.KEEP_ALIVE:
           // nothing to do here
-          setTimeout(() => sendKeepAlive(socket), KEEP_ALIVE_TIMEOUT);
-          sendKeepAlive(socket);
+          timeout = setTimeout(() => sendKeepAlive(socket), KEEP_ALIVE_TIMEOUT);
           break;
         default:
           console.log(`${type}: not supported`);

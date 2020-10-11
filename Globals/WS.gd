@@ -5,8 +5,6 @@ var websocket_url = "ws://localhost:3000" if OS.is_debug_build() else "wss://pro
 
 var _client = WebSocketClient.new()
 
-var _timer
-var keep_alive_timeout = 30.0
 
 # all websocket message types
 const TYPES = {
@@ -67,7 +65,7 @@ func init():
 	_client.connect_to_url(websocket_url)
 
 
-func _keep_alive():
+func send_keep_alive():
 	_client.get_peer(1).put_packet(JSON.print(
 		{
 			"type": TYPES.KEEP_ALIVE,
@@ -76,14 +74,6 @@ func _keep_alive():
 	).to_utf8())
 
 
-func init_keep_alive():
-	_timer = Timer.new()
-	add_child(_timer)
-	_timer.connect("timeout", self, "_keep_alive")
-	_timer.set_wait_time(keep_alive_timeout)
-	_timer.set_one_shot(false)
-	_timer.start()
-
 
 func _closed(_was_clean=false):
 	emit_signal("disconnected")
@@ -91,7 +81,7 @@ func _closed(_was_clean=false):
 func _connected(_protocol):
 	set_nickname(nickname)
 	emit_signal("connected")
-	init_keep_alive()
+	send_keep_alive()
 
 
 func _on_data():
