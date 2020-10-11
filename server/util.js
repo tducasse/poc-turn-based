@@ -86,7 +86,3 @@ export const sendServerMessageToRoom = (room, message) => {
     room,
   });
 };
-
-export const sendKeepAlive = (client) => {
-  sendMessage(client, { type: EVENT_TYPES.KEEP_ALIVE, payload: true });
-};

@@ -21,8 +21,6 @@ export const EVENT_TYPES = {
 
 export const SEPARATOR = "__";
 
-export const KEEP_ALIVE_TIMEOUT = 3000;
-
 export const STARTING = {
   RESOURCES: 10,
   INCOME: 10,
