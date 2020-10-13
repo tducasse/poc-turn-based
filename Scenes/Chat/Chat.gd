@@ -1,4 +1,4 @@
-extends NeedsServer
+extends "res://Common/NeedsServer.gd"
 
 
 onready var messages := $Messages

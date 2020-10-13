@@ -1,7 +1,5 @@
 extends Control
 
-class_name NeedsServer
-
 var _connection
 
 func _ready():
