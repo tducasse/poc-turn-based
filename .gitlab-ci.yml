@@ -1,4 +1,4 @@
-image: barichello/godot-ci:3.2.2
+image: barichello/godot-ci:3.2.3
 
 # Cache imported assets between runs
 cache:
@@ -18,7 +18,7 @@ variables:
 before_script:
   # Remove lfs hook (https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/issues/2245)
   - rm .git/hooks/post-checkout || true
-    
+
 # linux:
 #   stage: export
 #   script:
@@ -108,7 +108,6 @@ pages:
   artifacts:
     paths:
       - public
-
 # # Itch.io Deploy
 # itchio:linux:
 #   stage: deploy
