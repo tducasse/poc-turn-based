@@ -1,17 +1,130 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Scenes/Game/Shop/ShopItem.gd" type="Script" id=1]
-[ext_resource path="res://Fonts/PixelSansSerif.tres" type="DynamicFont" id=2]
+[ext_resource path="res://Fonts/PixelSansSerif_small.tres" type="DynamicFont" id=2]
 
-[node name="ShopItem" type="Button"]
+[node name="ShopItem" type="PanelContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -1720.0
-margin_bottom = -980.0
-rect_min_size = Vector2( 200, 100 )
-custom_fonts/font = ExtResource( 2 )
+margin_right = -1570.0
+margin_bottom = -880.0
+rect_min_size = Vector2( 350, 200 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="pressed" from="." to="." method="_on_ShopItem_pressed"]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 343.0
+margin_bottom = 193.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="HSplitContainer" parent="VBoxContainer"]
+margin_right = 336.0
+margin_bottom = 91.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Name" type="Label" parent="VBoxContainer/Title"]
+margin_top = 26.0
+margin_right = 162.0
+margin_bottom = 65.0
+size_flags_horizontal = 3
+custom_fonts/font = ExtResource( 2 )
+text = "Archery"
+align = 1
+
+[node name="Stats" type="Label" parent="VBoxContainer/Title"]
+margin_left = 174.0
+margin_top = 26.0
+margin_right = 336.0
+margin_bottom = 65.0
+size_flags_horizontal = 3
+custom_fonts/font = ExtResource( 2 )
+text = "1"
+align = 1
+
+[node name="Actions" type="HSplitContainer" parent="VBoxContainer"]
+margin_top = 95.0
+margin_right = 336.0
+margin_bottom = 186.0
+size_flags_vertical = 3
+
+[node name="Buy" type="Button" parent="VBoxContainer/Actions"]
+margin_right = 162.0
+margin_bottom = 91.0
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LabelContainer" type="VBoxContainer" parent="VBoxContainer/Actions/Buy"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="VBoxContainer/Actions/Buy/LabelContainer"]
+margin_top = 2.0
+margin_right = 162.0
+margin_bottom = 41.0
+size_flags_vertical = 6
+custom_fonts/font = ExtResource( 2 )
+text = "Recruit"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Price" type="Label" parent="VBoxContainer/Actions/Buy/LabelContainer"]
+margin_top = 49.0
+margin_right = 162.0
+margin_bottom = 88.0
+size_flags_vertical = 6
+custom_fonts/font = ExtResource( 2 )
+text = "1"
+align = 1
+
+[node name="Upgrade" type="Button" parent="VBoxContainer/Actions"]
+margin_left = 174.0
+margin_right = 336.0
+margin_bottom = 91.0
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LabelContainer" type="VBoxContainer" parent="VBoxContainer/Actions/Upgrade"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="VBoxContainer/Actions/Upgrade/LabelContainer"]
+margin_top = 2.0
+margin_right = 162.0
+margin_bottom = 41.0
+size_flags_vertical = 6
+custom_fonts/font = ExtResource( 2 )
+text = "Upgrade"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Price" type="Label" parent="VBoxContainer/Actions/Upgrade/LabelContainer"]
+margin_top = 49.0
+margin_right = 162.0
+margin_bottom = 88.0
+size_flags_vertical = 6
+custom_fonts/font = ExtResource( 2 )
+text = "2"
+align = 1
+[connection signal="pressed" from="VBoxContainer/Actions/Buy" to="." method="_on_Buy_pressed"]
+[connection signal="pressed" from="VBoxContainer/Actions/Upgrade" to="." method="_on_Upgrade_pressed"]

@@ -32,3 +32,49 @@ export const STARTING = {
 };
 
 export const KEEP_ALIVE_TIMEOUT = 30000;
+
+const ATTACK_ITEMS = {
+  archery: {
+    0: {
+      value: 1,
+      upgrade: 3,
+      price: 1,
+    },
+    1: {
+      value: 2,
+      price: 1,
+    },
+  },
+};
+
+const DEFENSE_ITEMS = {
+  walls: {
+    0: {
+      value: 1,
+      upgrade: 3,
+      price: 1,
+    },
+    1: {
+      value: 2,
+      price: 1,
+    },
+  },
+};
+
+const INCOME_ITEMS = {
+  cityHall: {
+    0: {
+      value: 10,
+      upgrade: 3,
+    },
+    1: {
+      value: 12,
+    },
+  },
+};
+
+export const SHOP_ITEMS = {
+  income: { ...INCOME_ITEMS },
+  attack: { ...ATTACK_ITEMS },
+  defense: { ...DEFENSE_ITEMS },
+};

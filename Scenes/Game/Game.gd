@@ -23,8 +23,9 @@ var _connection
 var waiting_text = "Waiting for your opponent..."
 
 func _ready():
-	_connection = WS.connect(WS.TYPES.GAME__BUY_ITEM, self, "_update_resources_income")
-	_connection = WS.connect(WS.TYPES.GAME__INIT_GAME, self, "_update_resources_income")
+	_connection = WS.connect(WS.TYPES.GAME__BUY_ITEM, self, "_update_state")
+	_connection = WS.connect(WS.TYPES.GAME__UPGRADE_ITEM, self, "_update_state")
+	_connection = WS.connect(WS.TYPES.GAME__INIT_GAME, self, "_init_state")
 	_connection = WS.connect(WS.TYPES.GAME__START_GAME, self, "_start_game")
 	_connection = WS.connect(WS.TYPES.GAME__NEXT_ROUND, self, "_start_next_round")
 	_connection = WS.connect(WS.TYPES.BACK_TO_LOBBY, self, "_back_to_lobby")
@@ -44,8 +45,7 @@ func _back_to_lobby(_value):
 func _on_Leave_pressed():
 	WS.send_message(WS.TYPES.LEAVE_ROOM, true)
 
-
-func _update_resources_income(value):
+func update_player_stats(value):
 	income = value.income
 	resources = value.resources
 	health = value.health
@@ -54,6 +54,15 @@ func _update_resources_income(value):
 	update_node_text(health_node, "HP: " + str(health))
 	
 	
+func _update_state(value):
+	shop_container.update_items(value.shopItems)
+	update_player_stats(value)
+
+
+func _init_state(value):
+	shop_container.init(value.shopItems)
+	update_player_stats(value)
+
 func update_node_text(node, text):
 	node.text = text
 

@@ -1,5 +1,12 @@
 import { db } from "@tducasse/js-db";
-import { getRoomByUser, sendMessage, sendToEveryone } from "./util";
+import {
+  deepCopy,
+  getStartShopItems,
+  getAllShopItems,
+  getRoomByUser,
+  sendMessage,
+  sendToEveryone,
+} from "./util";
 import { EVENT_TYPES, STARTING } from "./constants";
 
 const defaultRoomState = {
@@ -110,6 +117,7 @@ const initRoom = (name) => {
     attack: STARTING.ATTACK,
     defense: STARTING.DEFENSE,
     health: STARTING.HEALTH,
+    shopItems: getStartShopItems(),
   };
   db.rooms.update(
     { name },
@@ -119,10 +127,7 @@ const initRoom = (name) => {
           ...room.users.reduce(
             (acc, curr) => ({
               ...acc,
-              // has to be spread, because otherwise it's the same object reference
-              // and we don't want the two users to share the same resources, income, etc
-              // inherent to the way we handle the database
-              [curr]: { ...startingVals },
+              [curr]: deepCopy(startingVals),
             }),
             {}
           ),
@@ -135,7 +140,7 @@ const initRoom = (name) => {
     const { socket } = db.users.findOne({ uuid });
     sendMessage(socket, {
       type: EVENT_TYPES.GAME__INIT_GAME,
-      payload: startingVals,
+      payload: { ...startingVals, shopItems: getAllShopItems(uuid) },
     });
   });
 };

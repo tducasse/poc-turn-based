@@ -1,7 +1,11 @@
 import { db } from "@tducasse/js-db";
 import { EVENT_TYPES, STARTING } from "../constants";
+import { getNickname } from "../users";
 import {
   clamp,
+  deepCopy,
+  getAllShopItems,
+  getCurrentItem,
   getRoomByUser,
   sendMessage,
   sendServerMessageToRoom,
@@ -15,26 +19,38 @@ const sendNextUserState = (uuid) => {
   const { socket } = db.users.findOne({ uuid });
   sendMessage(socket, {
     type: EVENT_TYPES.GAME__BUY_ITEM,
-    payload: { resources, income, attack, defense, health },
+    payload: {
+      resources,
+      income,
+      attack,
+      defense,
+      health,
+      shopItems: getAllShopItems(uuid),
+    },
   });
 };
 
 const buyItem = ({ uuid, payload }) => {
-  const { type, cost } = payload;
-  const toAdd = payload[type];
-  if (!toAdd) {
+  const { name } = payload;
+  const roomName = getRoomByUser(uuid);
+  const previous = db.rooms.findOne({ name: roomName }).state[uuid];
+  const { shopItems } = previous;
+  const level = shopItems[name];
+  const { current, type } = getCurrentItem(name, level);
+  if (!current || !current.price) {
     return false;
   }
-  const previous = db.rooms.findOne({ users: uuid }).state[uuid];
-  if (previous.resources < cost) {
+  const { price, value } = current;
+
+  if (previous.resources < price) {
     return false;
   }
   db.rooms.update(
     { users: uuid },
     {
       $set: {
-        [`state.${uuid}.resources`]: previous.resources - cost,
-        [`state.${uuid}.${type}`]: (previous[type] || 0) + toAdd,
+        [`state.${uuid}.resources`]: previous.resources - price,
+        [`state.${uuid}.${type}`]: (previous[type] || 0) + value,
       },
     }
   );
@@ -47,19 +63,30 @@ const getNewHealth = (health, attack, defense) =>
 
 const getNewIncome = (resources, income) => resources + (income || 0);
 
-const getRoundSummary = (name) => {
+const getRoundSummary = (name, roundData) => {
   let gameOver = false;
+  const room = db.rooms.findOne({ name });
   const summary = [""]
     .concat(
-      Object.entries(db.rooms.findOne({ name }).state).map(
-        ([uuid, userState]) => {
-          gameOver = gameOver || !userState.health;
-          return `- ${db.users.findOne({ uuid }).nickname}: ${
-            userState.health
-          }HP`;
-        }
-      )
+      Object.entries(roundData).map(([uuid, roundState]) => {
+        const nickname = getNickname(uuid);
+        return [
+          `--`,
+          `- ${nickname}: ${roundState.attack} ATK`,
+          `- ${nickname}: ${roundState.defense} DEF`,
+        ];
+      })
     )
+    .concat(["--------"])
+    .concat(
+      Object.entries(room.state).map(([uuid, userState]) => {
+        gameOver = gameOver || !userState.health;
+        const { nickname } = db.users.findOne({ uuid });
+        return `- ${nickname}: ${userState.health} HP`;
+      })
+    )
+    .concat(["--------"])
+    .flat()
     .join("\n");
   return {
     summary,
@@ -71,6 +98,10 @@ const runFightPhase = (name) => {
   const { state } = db.rooms.findOne({ name });
   const [firstUuid, firstState] = Object.entries(state)[0];
   const [secondUuid, secondState] = Object.entries(state)[1];
+  const roundData = deepCopy({
+    [firstUuid]: firstState,
+    [secondUuid]: secondState,
+  });
   db.rooms.update(
     { name },
     {
@@ -103,7 +134,7 @@ const runFightPhase = (name) => {
   sendNextUserState(firstUuid);
   sendNextUserState(secondUuid);
 
-  const { summary, gameOver } = getRoundSummary(name);
+  const { summary, gameOver } = getRoundSummary(name, roundData);
   sendServerMessageToRoom(name, summary);
   sendToEveryone({
     type: EVENT_TYPES.GAME__NEXT_ROUND,
@@ -132,7 +163,40 @@ const nextRound = ({ uuid }) => {
   }
 };
 
+const upgradeItem = ({ uuid, payload }) => {
+  const { name } = payload;
+  const roomName = getRoomByUser(uuid);
+  const previous = db.rooms.findOne({ name: roomName }).state[uuid];
+  const { shopItems } = previous;
+  const level = shopItems[name];
+  const { current, type, next } = getCurrentItem(name, level);
+  if (!current || !current.upgrade || !next) {
+    return false;
+  }
+  const { upgrade } = current;
+  if (previous.resources < upgrade) {
+    return false;
+  }
+
+  db.rooms.update(
+    { users: uuid },
+    {
+      $set: {
+        [`state.${uuid}.resources`]: previous.resources - upgrade,
+        [`state.${uuid}.shopItems.${name}`]: level + 1,
+        ...(type === "income" && {
+          [`state.${uuid}.income`]: next.value,
+        }),
+      },
+    }
+  );
+
+  sendNextUserState(uuid);
+  return true;
+};
+
 export default {
   buyItem,
+  upgradeItem,
   nextRound,
 };

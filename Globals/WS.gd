@@ -19,6 +19,7 @@ const TYPES = {
 	"GAME__START_GAME": "game__start_game",
 	"GAME__INIT_GAME": "game__init_game",
 	"GAME__BUY_ITEM": "game__buy_item",
+	"GAME__UPGRADE_ITEM": "game__upgrade_item",
 	"GAME__NEXT_ROUND": "game__next_round",
 	"SET_NICKNAME": "set_nickname",
 	"KEEP_ALIVE": "keep_alive",
@@ -37,6 +38,7 @@ signal new_chat_message(value)
 signal join_room(value)
 signal back_to_lobby(value)
 signal game__buy_item(value)
+signal game__upgrade_item(value)
 signal game__start_game(value)
 signal game__init_game(value)
 signal game__next_round(value)

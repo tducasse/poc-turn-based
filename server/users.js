@@ -56,3 +56,6 @@ export const setNickname = (uuid, nickname) => {
   });
   return true;
 };
+
+export const getNickname = (uuid) =>
+  (db.users.findOne({ uuid }) || {}).nickname;
