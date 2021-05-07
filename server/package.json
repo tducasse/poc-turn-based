@@ -8,7 +8,9 @@
     "serv:start": "nodemon -r esm index.js",
     "dev": "run-s -c serv:*",
     "start": "node -r esm index.js",
-    "cli": "node -r esm cli.js"
+    "cli": "node -r esm cli.js",
+    "prebuild": "mkdir -p dist && esbuild index.js --bundle --outfile=dist/bundle.js --platform=node", 
+    "build": "pkg dist/bundle.js -t node14-linux-x64 -o dist/app"
   },
   "keywords": [],
   "author": "",
@@ -24,11 +26,13 @@
     "ws": "^7.3.1"
   },
   "devDependencies": {
+    "esbuild": "^0.11.19",
     "eslint": "^7.10.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.1.4",
+    "pkg": "^5.1.0",
     "prettier": "^2.1.2"
   }
 }
