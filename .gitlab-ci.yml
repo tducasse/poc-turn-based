@@ -38,6 +38,11 @@ server:
     - cd server
     - gem install dpl
     - dpl --provider=heroku --app=$APP_ID --api-key=$HEROKU_API_KEY
+    - npm run build
+  artifacts:
+    name: $EXPORT_NAME-server-$CI_JOB_NAME
+    paths:
+      - server/dist/
 
 windows:
   only:

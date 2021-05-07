@@ -9,8 +9,8 @@
     "dev": "run-s -c serv:*",
     "start": "node -r esm index.js",
     "cli": "node -r esm cli.js",
-    "prebuild": "mkdir -p dist && esbuild index.js --bundle --outfile=dist/bundle.js --platform=node", 
-    "build": "pkg dist/bundle.js -t node14-linux-x64 -o dist/app"
+    "prebuild": "rm -rf dist && mkdir dist && esbuild index.js --bundle --outfile=dist/bundle.js --platform=node", 
+    "build": "pkg dist/bundle.js -t node14-win,node14-linux -o dist/app"
   },
   "keywords": [],
   "author": "",
